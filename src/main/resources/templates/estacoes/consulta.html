@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeLeaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<meta charset="UTF-8">
+
+<div layout:fragment="content">
+    <div class="alert alert-dark mt-3" th:if="${msg != null}"
+         th:text="${msg}" ></div>
+    <div class="card" th:if="${msg == null}">
+        <div class="card text-white bg-dark p-1 text-center">
+            <p class="text-white">Obter rota mais curta</p>
+        </div>
+
+        <div class="card-body mt-3">
+            <form method="POST" th:object="${estacoes}"
+                  th:action="@{/estacoes/rotas}">
+                <div class="form-group mb-3">
+                    <label >Estacao de Origem:</label>
+                    <select class="form-select" th:field="*{estacaoOrigem}">
+                        <option th:each="estacao: ${listaEstacoes}" th:value="${estacao}" th:text="${estacao}" th:name="${estacaoOrigem}" />
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label >Estacao de Destino:</label>
+                    <select class="form-select" th:field="*{estacaoDestino}">
+                        <option th:each="estacao: ${listaEstacoes}" th:value="${estacao}" th:text="${estacao}" th:name="${estacaoDestino}" />
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-dark">Consultar</button>
+            </form>
+        </div>
+    </div>
+
+    <div layout:fragment="scripts"></div>
+</div>
+</html>

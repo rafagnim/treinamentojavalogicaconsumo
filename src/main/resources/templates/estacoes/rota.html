@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeLeaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<meta charset="UTF-8">
+
+<div layout:fragment="content">
+    <div class="alert alert-dark mt-3" th:if="${msg != null}"
+         th:text="${msg}" ></div>
+
+    <div class="card" th:if="${msg == null}">
+    <div th:if="${not #lists.isEmpty(rota)}" id="rota">
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Estação de Origem --->    (...)   ---> Estação de Destino</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="r : ${rota}">
+                <td th:text="${r}"></td>
+            </tr>
+            <tr>
+                <td>
+                    <a class="btn btn-dark btn-sm"
+                       th:href="@{/estacoes/consultar}">Retornar</a>
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+</div>
+
+<div layout:fragment="scripts">
+
+    <script>
+
+        </script>
+</div>
+</div>
+
+</html>
