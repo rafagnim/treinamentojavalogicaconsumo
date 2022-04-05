@@ -11,10 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import reactor.core.publisher.Mono;
-
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @Controller
 @RequestMapping("item")
@@ -85,29 +82,6 @@ public class ItemController {
     @RequestMapping(path = "adicionarpreenchido", method = RequestMethod.POST)
     public ModelAndView adicionarItemPreenchido(ItemContrato item, Integer contrato_id, RedirectAttributes redirectAttributes) {
         ModelAndView mv = new ModelAndView("redirect:/item/adicionar");
-//        System.out.println("Adicionar item Preenchido");
-//        System.out.println(item.getId_duplicata());
-//        System.out.println(item.getVl_duplicata());
-//        System.out.println(contrato_id);
-
-//        var contrato = webClient.get().uri("/consultar/" + contrato_id)
-//                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-//                .exchangeToMono(e -> e.bodyToMono(Contrato.class)).block();
-
-//        var itensContrato = webClientItem.get().uri("/listar/" + contrato_id)
-//                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-//                .exchangeToFlux(e -> e.bodyToFlux(ItemContrato.class))
-//                .flatMapIterable(i -> {return Arrays.asList(i);})
-//                .toIterable();
-//        List<ItemContrato> itens = new ArrayList<>();
-//        itensContrato.forEach(i -> {
-//            itens.add(i);
-//        });
-
-        //item.setContrato(contrato_id);
-        //itens.add(item);
-        //contrato.setItens(itens);
-
         try {
             var contrato = webClient.put().uri("/atualizaritens/" + contrato_id)
                     .body(Mono.just(item), ItemContrato.class)
@@ -122,7 +96,6 @@ public class ItemController {
                     .flatMapIterable(i -> {return Arrays.asList(i);})
                     .toIterable();
 
-            //redirectAttributes.addFlashAttribute("contrato", contrato);
             redirectAttributes.addFlashAttribute("contrato_id", contrato_id);
             redirectAttributes.addFlashAttribute("listaItens", itens);
 
@@ -132,4 +105,21 @@ public class ItemController {
 
         return mv;
     }
+
+    @RequestMapping(path = "excluir", method = RequestMethod.GET)
+    public ModelAndView excluir(Integer item_id, RedirectAttributes redirectAttributes) {
+        ModelAndView mv = new ModelAndView("redirect:/item/adicionar");
+
+        System.out.println(item_id);
+
+        var contrato = webClient.put().uri("/excluiitem/" + item_id)
+                .body(Mono.just(item_id), Integer.class)
+                .retrieve()
+                .onStatus(HttpStatus::isError, response -> response.bodyToMono(String.class)
+                        .flatMap(error -> Mono.error(new RuntimeException(error))))
+                .bodyToMono(Contrato.class).block();
+
+        return mv;
+    }
+
 }
