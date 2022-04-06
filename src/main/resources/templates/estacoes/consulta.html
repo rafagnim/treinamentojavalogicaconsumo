@@ -12,26 +12,104 @@
             <p class="text-white">Obter rota mais curta</p>
         </div>
 
-        <div class="card-body mt-3">
+        <div th:if="${#lists.isEmpty(rota)}" class="card-body mt-3">
             <form method="POST" th:object="${estacoes}"
-                  th:action="@{/estacoes/rotas}">
+                  th:action="@{/estacoes/rotas}" name="estacoes" onSubmit="return consultar()">
                 <div class="form-group mb-3">
                     <label >Estacao de Origem:</label>
-                    <select class="form-select" th:field="*{estacaoOrigem}">
-                        <option th:each="estacao: ${listaEstacoes}" th:value="${estacao}" th:text="${estacao}" th:name="${estacaoOrigem}" />
+
+                    <select class="form-select" th:field="*{estacaoOrigem}" name="estacaoOrigem">
+                        <option selected data-default value=""></option>
+                        <option th:each="estacao: ${listaEstacoes}" th:value="${estacao}" th:text="${estacao}" th:name="${estacaoOrigem}"/>
                     </select>
                 </div>
                 <div class="form-group mb-3">
                     <label >Estacao de Destino:</label>
-                    <select class="form-select" th:field="*{estacaoDestino}">
-                        <option th:each="estacao: ${listaEstacoes}" th:value="${estacao}" th:text="${estacao}" th:name="${estacaoDestino}" />
+                    <select class="form-select" th:field="*{estacaoDestino}" th:name="estacaoDestino">
+                        <option selected data-default value=""></option>
+                        <option th:each="estacao: ${listaEstacoes}" th:value="${estacao}" th:text="${estacao}" th:name="${estacaoDestino}"/>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-dark">Consultar</button>
             </form>
         </div>
+
+        <div class="card" th:if="${msg == null}">
+            <div th:if="${not #lists.isEmpty(rota)}" id="rota">
+
+
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+
+                            <div class="border border-info rounded-3 mt-3" style="text-align: center;">
+                                <label >Origem:</label>
+                                <p th:text="${estacaoSelected1}"></p>
+                            </div>
+                            <div class="border border-info rounded-3 mt-3" style="text-align: center;">
+                                <label >Destino:</label>
+                                <p th:text="${estacaoSelected2}"></p>
+                            </div>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <div class="border border-info rounded-3 mt-3" style="text-align: center;">
+                        <label >Rota:</label>
+                        <p></p>
+                    </div>
+
+                    <tr th:each="r : ${rota}">
+                        <td th:text="${r}"></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a class="btn btn-dark btn-sm"
+                               th:href="@{/estacoes/consultar}">Retornar</a>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+
+        <div class="modal" tabindex="-1" id="alerta">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Informações incompletas</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Selecione estação de Origem e Destino.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
+<!--                        <button type="button" class="btn btn-primary">Save changes</button>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <div layout:fragment="scripts"></div>
+    <div layout:fragment="scripts">
+        <script>
+            function consultar() {
+                   if(document.estacoes.estacaoOrigem.value== "" || document.estacoes.estacaoDestino.value == "") {
+                        var myModal = new bootstrap.Modal(document.getElementById('alerta'), {
+                            keyboard: false
+                        });
+                        myModal.show();
+                        document.estacoes.estacaoOrigem.focus();
+                        return false;
+                    }
+                return true;
+            }
+        </script>
+    </div>
 </div>
 </html>

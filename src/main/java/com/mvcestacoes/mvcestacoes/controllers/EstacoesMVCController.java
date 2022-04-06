@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
@@ -37,8 +38,8 @@ public class EstacoesMVCController {
     }
 
         @RequestMapping(path = "rotas", method = RequestMethod.POST)
-        public ModelAndView exibeMenorRota(EstacaoConsulta estacoes) {
-            ModelAndView mv = new ModelAndView("estacoes/rota.html");
+        public ModelAndView exibeMenorRota(EstacaoConsulta estacoes, RedirectAttributes redirectAttributes) {
+            ModelAndView mv = new ModelAndView("redirect:/estacoes/consultar");
             String[] consulta = {estacoes.getEstacaoOrigem(), estacoes.getEstacaoDestino()};
             var rota = webClient.post().uri("/rotas")
                     //.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -50,7 +51,9 @@ public class EstacoesMVCController {
                     })
                     .toIterable();
 
-            mv.addObject("rota", rota);
+            redirectAttributes.addFlashAttribute("rota", rota);
+            redirectAttributes.addFlashAttribute("estacaoSelected1", estacoes.getEstacaoOrigem());
+            redirectAttributes.addFlashAttribute("estacaoSelected2", estacoes.getEstacaoDestino());
             return mv;
         }
 }

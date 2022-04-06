@@ -15,28 +15,23 @@
     <link rel="stylesheet"
           href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
+    <style>
+<!--        select option[data-default] {-->
+<!--            color: #999;-->
+<!--        }-->
+    </style>
+
 </head>
 
 <body>
 
-<div class="container-fluid"  style="margin: 0px; padding: 0px; width: 100%">
-
-
-    <div id=top>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" th:href="@{/}">Estações e Contratos</a>
-<!--                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">-->
-<!--                    <span class="navbar-toggler-icon"></span>-->
-<!--                </button>-->
-            </div>
-        </nav>
-    </div>
-
+<div class="container-fluid"  style="margin: 0px; padding: 0px; width: 95%">
 
     <div>
     <div class="row">
         <div class="col-2 bg-dark" style="height: 100vh; min-width: 160px; padding: 10px;">
+
+            <a class="btn btn-dark mt-3 mb-5 ml-3" th:href="@{/}" style="text-align: center; font-size:large;">Estações e Contratos</a>
 
             <div class="dropdown bg-dark" style=" margin-left: 30px;">
                 <a class="btn btn-dark dropdown-toggle" th:href="@{/estacoes}" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
@@ -65,9 +60,10 @@
         </div>
 
 
-        <div class="col-10">
-            <div id="conteudo" class="container" layout:fragment="content"></div>
+        <div class="col-10 mt-3">
+            <div id="conteudo" class="container mt-2" layout:fragment="content"></div>
         </div>
+
     </div>
     </div>
 

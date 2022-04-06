@@ -42,16 +42,15 @@ public class ContratoController {
         ModelAndView mv = new ModelAndView("contratos/cadastro.html");
         contrato.setVl_contrato(0D);
         try {
-            var objetoRetorno = webClient.post().uri("/cadastrar")
+            var c = webClient.post().uri("/cadastrar")
                     .body(Mono.just(contrato), Contrato.class)
                     .retrieve()
                     .onStatus(HttpStatus::isError, response -> response.bodyToMono(String.class)
                             .flatMap(error -> Mono.error(new RuntimeException(error))))
-                    .bodyToMono(Contrato.class)
-                    .map(c -> {
-                        return "Contrato " + c.getCpf_cnpj() + " cadastrado com sucesso";
-                    });
-            mv.addObject("msg", objetoRetorno.block());
+                    .bodyToMono(Contrato.class).block();
+
+            mv.addObject("msg", "Contrato " + c.getCpf_cnpj() + " cadastrado com sucesso.");
+            mv.addObject("contrato", c);
         } catch (RuntimeException r) {
             mv.addObject("msg", (r.getMessage().split("\\[")[1]).split("\\]")[0]);
         }

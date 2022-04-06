@@ -21,27 +21,35 @@
             <p class="text-white">Cadastrar Itens do Contrato</p>
         </div>
 
+        <div th:if="${contrato_cpf_cnpj} == null">
         <div class="card-header">
-            <p class="text-primary">Filtrar Contrato</p>
+            <p class="text-dark">Filtrar Contrato</p>
         </div>
-        <div class="card-body" mb-3>
+
+        <div class="card-body mt-3">
             <form method="GET" th:action="@{/item/buscarcontrato}">
                 <div class="form-group mb-3">
                     <label>CPF ou CNPJ</label>
                     <input class="form-control" type="text" name="cpf_cnpj" th:value="${cpf_cnpj}">
                 </div>
-                <button type="submit" class="btn btn-primary">Pesquisar
+                <button type="submit" class="btn btn-dark">Pesquisar
                 </button>
             </form>
         </div>
+        </div>
+
 
         <div class="form-group mb-3" th:if="${not #lists.isEmpty(listaContratos)}">
+            <div class="card-header">
+                <p class="text-dark">Contrato: </p>
+                <p class="text-dark" th:text="${contrato_cpf_cnpj}"></p>
+            </div>
             <table class="table table-striped">
                 <thead>
                 <tr>
                     <th>Id</th>
                     <th>CPF/CNPJ</th>
-                    <th>Valor Total</th>
+                    <th style="text-align: right;">Valor Total</th>
                 </tr>
                 </thead>
 
@@ -50,7 +58,7 @@
                     <td th:text="${contrato.id}"></td>
                     <td th:text="${contrato.cpf_cnpj}"></td>
                     <td th:text="${contrato.vl_contrato}" style="text-align: right;"></td>
-                    <td><a class="btn btn-primary btn-sm"
+                    <td><a class="btn btn-dark btn-sm"
                            th:href="@{/item/adicionar(id=${contrato.id})}">Cadastrar/Adicionar Duplicatas</a>
 
                 </tr>
@@ -60,12 +68,16 @@
 
 
         <div class="form-group mb-3" th:if="${not #lists.isEmpty(listaItens)}">
+            <div class="card-header">
+                <p class="text-dark">Contrato: </p>
+                <p class="text-dark" th:text="${contrato_cpf_cnpj}"></p>
+            </div>
             <table class="table table-striped">
                 <thead>
                 <tr>
                     <th>Id</th>
                     <th>Identificador da Duplicata</th>
-                    <th>Valor da Duplicata</th>
+                    <th style="text-align: right;">Valor da Duplicata</th>
                 </tr>
                 </thead>
 
@@ -105,7 +117,7 @@
                 <button type="submit" class="btn btn-dark">Adicionar Duplicata</button>
                 </br>
                 </br>
-                <a class="navbar-brand" th:href="@{/}"> <button type="button" class="btn btn-dark" >Retornar</button></a>
+                <a class="navbar-brand" th:href="@{/item/adicionar}"> <button type="button" class="btn btn-secondary" >Retornar</button></a>
             </form>
 
         </div>

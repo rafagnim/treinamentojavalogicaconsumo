@@ -6,25 +6,13 @@
 
 <div layout:fragment="content">
 
-    <div class="alert alert-dark mt-3" th:if="${msg != null}"
-         th:text="${msg}">
+    <div class="alert alert-dark mt-3" th:if="${msg != null}">
+        <p th:text="${msg}"></p>
+        <div>
+            <a class="btn btn-dark btn-sm" th:href="@{/}">Sair</a>
+            <a class="btn btn-dark btn-sm" th:href="@{/item/adicionar(id=${contrato.id})}">Cadastrar/Adicionar Duplicatas</a>
+        </div>
     </div>
-
-    <div class="alert alert-dark mt-3" th:if="${obj != null}">
-        <tr th:each="o : ${obj}">
-            <td th:text="${o.mensagem}"></td>
-        </tr>
-    </div>
-
-
-<!--    <tr th:each="r : ${rota}">-->
-<!--        <td th:text="${r}"></td>-->
-<!--    </tr>-->
-
-<!--    <div th:if="${obj != null}">-->
-<!--        Mensagem:<span th:text="${obj.mensagem}"></span><br>-->
-<!--    </div>-->
-
 
     <div class="card" th:if="${msg == null}">
         <div class="card text-white bg-dark p-1 text-center">

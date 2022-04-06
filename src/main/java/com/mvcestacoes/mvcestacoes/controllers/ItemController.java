@@ -51,6 +51,7 @@ public class ItemController {
                                 .flatMapIterable(i -> {return Arrays.asList(i);})
                                 .toIterable();
                 mv.addObject("listaContratos", contratos);
+                mv.addObject("contrato_cpf_cnpj", cpf_cnpj);
             } catch (RuntimeException r) {
                 mv.addObject("msg", (r.getMessage().split("\\[")[1]).split("\\]")[0]);
             }
@@ -70,9 +71,15 @@ public class ItemController {
                     .flatMapIterable(i -> {return Arrays.asList(i);})
                     .toIterable();
 
+            var contrato = webClient.get().uri("/consultar/" + id)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    .exchangeToMono(e -> e.bodyToMono(Contrato.class)).block();
+
             mv.addObject("listaItens", itens);
             mv.addObject("itemcontrato", new ItemContrato());
             mv.addObject("contrato_id", id);
+            mv.addObject("contrato_cpf_cnpj", contrato.getCpf_cnpj());
+
         } else {
             mv.addObject("itemcontrato", new ItemContrato());
         }
@@ -98,6 +105,7 @@ public class ItemController {
 
             redirectAttributes.addFlashAttribute("contrato_id", contrato_id);
             redirectAttributes.addFlashAttribute("listaItens", itens);
+            redirectAttributes.addFlashAttribute("contrato_cpf_cnpj", contrato.getCpf_cnpj());
 
         } catch (RuntimeException r) {
             //mv.addObject("msg", (r.getMessage().split("\\[")[1]).split("\\]")[0]);
@@ -110,14 +118,22 @@ public class ItemController {
     public ModelAndView excluir(Integer item_id, RedirectAttributes redirectAttributes) {
         ModelAndView mv = new ModelAndView("redirect:/item/adicionar");
 
-        System.out.println(item_id);
-
         var contrato = webClient.put().uri("/excluiitem/" + item_id)
                 .body(Mono.just(item_id), Integer.class)
                 .retrieve()
                 .onStatus(HttpStatus::isError, response -> response.bodyToMono(String.class)
                         .flatMap(error -> Mono.error(new RuntimeException(error))))
                 .bodyToMono(Contrato.class).block();
+
+        var itens = webClientItem.get().uri("/listar/" + contrato.getId())
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .exchangeToFlux(e -> e.bodyToFlux(ItemContrato.class))
+                .flatMapIterable(i -> {return Arrays.asList(i);})
+                .toIterable();
+
+        redirectAttributes.addFlashAttribute("contrato_id", contrato.getId());
+        redirectAttributes.addFlashAttribute("listaItens", itens);
+        redirectAttributes.addFlashAttribute("contrato_cpf_cnpj", contrato.getCpf_cnpj());
 
         return mv;
     }
