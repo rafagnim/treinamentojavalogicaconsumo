@@ -1,4 +1,4 @@
-package com.mvcestacoes.mvcestacoes.entities;
+package com.mvcestacoes.entities;
 
 public class EstacaoConsulta {
 

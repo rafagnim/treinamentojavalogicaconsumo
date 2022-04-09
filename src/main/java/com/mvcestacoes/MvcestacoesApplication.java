@@ -1,4 +1,4 @@
-package com.mvcestacoes.mvcestacoes;
+package com.mvcestacoes;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

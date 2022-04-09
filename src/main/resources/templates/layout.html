@@ -16,9 +16,13 @@
           href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
     <style>
-<!--        select option[data-default] {-->
-<!--            color: #999;-->
-<!--        }-->
+
+        #gradiente {
+            width:100%;
+            height:5em;
+            background-color: gray;
+            background-image: linear-gradient( to right, black, rgb(66, 65, 65), gray, rgb(250, 244, 244));
+        }
     </style>
 
 </head>
@@ -50,8 +54,19 @@
                 </a>
                 <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink1">
                     <li>
-                        <a class="dropdown-item" th:href="@{/contrato/cadastrar}">Cadastrar Contrato</a>
-                        <a class="dropdown-item" th:href="@{/item/cadastrar}">Cadastrar Itens</a>
+                        <a class="dropdown-item" th:href="@{/contrato/cadastrar}">Cadastrar</a>
+                        <a class="dropdown-item" th:href="@{/contrato/consultar}">Consultar</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="dropdown bg-dark mt-2" style=" margin-left: 30px;">
+                <a class="btn btn-dark dropdown-toggle" th:href="@{/estacoes}" role="button" id="dropdownMenuLink2" data-bs-toggle="dropdown" aria-expanded="false">
+                    Empréstimos
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink1">
+                    <li>
+                        <a class="dropdown-item" th:href="@{/contrato/emprestimo}">Simular</a>
                     </li>
                 </ul>
             </div>
@@ -60,7 +75,8 @@
         </div>
 
 
-        <div class="col-10 mt-3">
+        <div class="col-10">
+            <div  id="gradiente"></div>
             <div id="conteudo" class="container mt-2" layout:fragment="content"></div>
         </div>
 

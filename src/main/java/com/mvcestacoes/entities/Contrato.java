@@ -1,4 +1,4 @@
-package com.mvcestacoes.mvcestacoes.entities;
+package com.mvcestacoes.entities;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ public class Contrato {
     private Integer id;
     private String cpf_cnpj;
     private Double vl_contrato;
-    private List<ItemContrato> itens;
+    public static List<ItemContrato> itens;
 
     public Contrato() {
     }
