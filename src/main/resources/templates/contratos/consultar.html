@@ -6,35 +6,34 @@
 
 <div layout:fragment="content">
 
-    <!--    <div class="alert alert-dark mt-3" th:if="${msg != null}"-->
-    <!--         th:text="${msg}">-->
-    <!--    </div>-->
-
-
-    <div class="alert alert-dark mt-3" th:if="${msg != null}">
+    <div class="alert alert-danger mt-3" th:if="${msg != null}">
         <div>
             <p th:text="${msg}"></p>
         </div>
     </div>
-    <div th:if="${msg != null}">
-        <a class="btn btn-dark btn-sm" th:href="@{/contrato/cadastrar}">Retornar</a>
-    </div>
 
-    <div class="card" th:if="${msg == null}">
+    <div class="card" th:if="${#lists.isEmpty(itens)}">
         <div class="card text-white bg-dark p-1 text-center">
             <p class="text-white">Itens do Contrato</p>
         </div>
 
-                <div th:if="${#lists.isEmpty(itens)}">
-                <div class="card-header">
+        <div class="alert alert-danger mt-3" id="divmsgcontrato" >
+            <div>
+                <p id="msgcontrato" th:text="${msgcontrato}"></p>
+            </div>
+        </div>
+
+                <div>
+                <div class="card-header" th:if="${#lists.isEmpty(itens)}">
                     <p class="text-dark">Filtrar Contrato</p>
                 </div>
 
-                <div class="card-body mt-3">
-                    <form method="GET" th:action="@{/item/buscarcontrato}">
+                <div class="card-body mt-3" th:if="${#lists.isEmpty(itens)}">
+                    <form method="GET" th:action="@{/contrato/buscarcontratos}">
                         <div class="form-group mb-3">
                             <label>CPF ou CNPJ</label>
-                            <input class="form-control" type="text" name="cpf_cnpj" th:value="${cpf_cnpj}">
+                            <input class="form-control" type="number" name="cpf_cnpj" th:value="${cpf_cnpj}" min="100" step="1" id="cpfcnpj" autofocus required onfocusout="valida()">
+
                         </div>
                         <button type="submit" class="btn btn-dark">Pesquisar
                         </button>
@@ -43,56 +42,39 @@
 
                 </div>
 
-        <div th:if="${not #lists.isEmpty(itens)}">
-            <div class="card-header">
-                <p class="text-dark">Contrato Salvo com Sucesso</p>
-            </div>
+                <div class="form-group mb-3" th:if="${not #lists.isEmpty(contratos)}">
+                    <div class="card-header">
+                        <p class="text-dark">Contrato: </p>
+                        <p class="text-dark" th:text="${contrato_cpf_cnpj}"></p>
+                    </div>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>CPF/CNPJ</th>
+                            <th style="text-align: right;">Valor Total</th>
+                        </tr>
+                        </thead>
 
-<!--            <div class="card-body mt-3">-->
-<!--                <form method="GET" th:action="@{/item/buscarcontrato}">-->
-<!--                    <div class="form-group mb-3">-->
-<!--                        <label>CPF ou CNPJ</label>-->
-<!--                        <input class="form-control" type="text" name="cpf_cnpj" th:value="${cpf_cnpj}">-->
-<!--                    </div>-->
-<!--                    <button type="submit" class="btn btn-dark">Pesquisar-->
-<!--                    </button>-->
-<!--                </form>-->
-<!--            </div>-->
+                        <tbody>
+                        <tr th:each="contrato : ${contratos}">
+                            <td th:text="${contrato.id}"></td>
+                            <td th:text="${contrato.cpf_cnpj}"></td>
+                            <td th:text="${contrato.vl_contrato}" style="text-align: right;"></td>
+                            <td>
 
-        </div>
+                                <a class="btn btn-dark btn-sm"
+                                   th:href="@{/contrato/consultar(id=${contrato.id})}">Consultar Itens</a>
 
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
 
+    </div>
 
-        <!--        <div class="form-group mb-3" th:if="${not #lists.isEmpty(listaContratos)}">-->
-        <!--            <div class="card-header">-->
-        <!--                <p class="text-dark">Contrato: </p>-->
-        <!--                <p class="text-dark" th:text="${contrato_cpf_cnpj}"></p>-->
-        <!--            </div>-->
-        <!--            <table class="table table-striped">-->
-        <!--                <thead>-->
-        <!--                <tr>-->
-        <!--                    <th>Id</th>-->
-        <!--                    <th>CPF/CNPJ</th>-->
-        <!--                    <th style="text-align: right;">Valor Total</th>-->
-        <!--                </tr>-->
-        <!--                </thead>-->
-
-        <!--                <tbody>-->
-        <!--                <tr th:each="contrato : ${listaContratos}">-->
-        <!--                    <td th:text="${contrato.id}"></td>-->
-        <!--                    <td th:text="${contrato.cpf_cnpj}"></td>-->
-        <!--                    <td th:text="${contrato.vl_contrato}" style="text-align: right;"></td>-->
-        <!--                    <td>-->
-        <!--                        -->
-        <!--                        <a class="btn btn-dark btn-sm"-->
-        <!--                           th:href="@{/item/adicionar(id=${contrato.id})}">Cadastrar/Adicionar Duplicatas</a>-->
-
-        <!--                </tr>-->
-        <!--                </tbody>-->
-        <!--            </table>-->
-        <!--        </div>-->
-
-        <div class="card-header mb-2">
+    <div th:if="${not #lists.isEmpty(itens)}">
+        <div class="card-header mb-2" th:if="${contrato.cpf_cnpj != null}">
 
             <table class="table table-striped">
                 <thead>
@@ -120,7 +102,7 @@
         </div>
 
 
-        <div class="form-group" th:if="${not #lists.isEmpty(itens)}">
+        <div class="form-group">
 
             <table class="table table-striped">
                 <thead>
@@ -137,9 +119,6 @@
                     <td th:text="${itemcontrato.id_duplicata}"></td>
                     <td th:text="${#numbers.formatCurrency(itemcontrato.vl_duplicata)}" style="text-align: right;"></td>
 
-                    <td><a class="btn btn-danger btn-sm"
-                           th:href="@{/item/excluir(item_id=${itemcontrato.id_duplicata}, vl_id=${itemcontrato.vl_duplicata}, contrato_cpf_cnpj=${contrato_cpf_cnpj}, contrato_valor=${contrato_valor})}">X</a>
-
                 </tr>
                 </tbody>
                 <tfoot>
@@ -152,11 +131,15 @@
                 </tfoot>
             </table>
         </div>
+
+        <div>
+            <a class="btn btn-dark btn-sm" th:href="@{/contrato/consultar}">Retornar</a>
+        </div>
+
     </div>
 
     <div layout:fragment="scripts">
         <script>
-
         </script>
     </div>
 </div>

@@ -6,11 +6,6 @@
 
 <div layout:fragment="content">
 
-<!--    <div class="alert alert-dark mt-3" th:if="${msg != null}"-->
-<!--         th:text="${msg}">-->
-<!--    </div>-->
-
-
     <div class="alert alert-dark mt-3" th:if="${msg != null}">
         <div>
             <p th:text="${msg}"></p>
@@ -20,63 +15,10 @@
         <a class="btn btn-dark btn-sm" th:href="@{/contrato/cadastrar}">Retornar</a>
     </div>
 
-<!--    <div class="alert alert-dark mt-3" th:if="${obj != null}">-->
-<!--        <tr th:each="o : ${obj}">-->
-<!--            <td th:text="${o.mensagem}"></td>-->
-<!--        </tr>-->
-<!--    </div>-->
-
     <div class="card" th:if="${msg == null}">
         <div class="card text-white bg-dark p-1 text-center">
             <p class="text-white">Cadastrar Itens do Contrato</p>
         </div>
-
-<!--        <div th:if="${contrato_cpf_cnpj} == null">-->
-<!--        <div class="card-header">-->
-<!--            <p class="text-dark">Filtrar Contrato</p>-->
-<!--        </div>-->
-
-<!--        <div class="card-body mt-3">-->
-<!--            <form method="GET" th:action="@{/item/buscarcontrato}">-->
-<!--                <div class="form-group mb-3">-->
-<!--                    <label>CPF ou CNPJ</label>-->
-<!--                    <input class="form-control" type="text" name="cpf_cnpj" th:value="${cpf_cnpj}">-->
-<!--                </div>-->
-<!--                <button type="submit" class="btn btn-dark">Pesquisar-->
-<!--                </button>-->
-<!--            </form>-->
-<!--        </div>-->
-<!--        </div>-->
-
-
-<!--        <div class="form-group mb-3" th:if="${not #lists.isEmpty(listaContratos)}">-->
-<!--            <div class="card-header">-->
-<!--                <p class="text-dark">Contrato: </p>-->
-<!--                <p class="text-dark" th:text="${contrato_cpf_cnpj}"></p>-->
-<!--            </div>-->
-<!--            <table class="table table-striped">-->
-<!--                <thead>-->
-<!--                <tr>-->
-<!--                    <th>Id</th>-->
-<!--                    <th>CPF/CNPJ</th>-->
-<!--                    <th style="text-align: right;">Valor Total</th>-->
-<!--                </tr>-->
-<!--                </thead>-->
-
-<!--                <tbody>-->
-<!--                <tr th:each="contrato : ${listaContratos}">-->
-<!--                    <td th:text="${contrato.id}"></td>-->
-<!--                    <td th:text="${contrato.cpf_cnpj}"></td>-->
-<!--                    <td th:text="${contrato.vl_contrato}" style="text-align: right;"></td>-->
-<!--                    <td>-->
-<!--                        -->
-<!--                        <a class="btn btn-dark btn-sm"-->
-<!--                           th:href="@{/item/adicionar(id=${contrato.id})}">Cadastrar/Adicionar Duplicatas</a>-->
-
-<!--                </tr>-->
-<!--                </tbody>-->
-<!--            </table>-->
-<!--        </div>-->
 
         <div class="card-header mb-2">
 
@@ -85,6 +27,9 @@
                     <tr>
                         <th>
                             <p class="text-dark">Contrato</p>
+                        </th>
+                        <th>
+                            <p class="text-dark">Data Vencimento</p>
                         </th>
                         <th>
                             <p class="text-dark" style="text-align: right;">Valor Total</p>
@@ -98,6 +43,9 @@
                     <tr>
                         <th>
                             <p class="text-dark" th:text="${contrato_cpf_cnpj}"></p>
+                        </th>
+                        <th>
+                            <p class="text-dark" th:text="${contrato_dataVencimento}"></p>
                         </th>
                         <th>
                             <p class="text-dark" th:text="${#numbers.formatCurrency(contrato_valor)}" style="text-align: right;"></p>
@@ -125,12 +73,12 @@
 
                 <tbody>
                 <tr th:each="itemcontrato : ${itens}" id="itens">
-<!--                    <td th:text="${itemcontrato.id}"></td>-->
                     <td th:text="${itemcontrato.id_duplicata}"></td>
                     <td th:text="${#numbers.formatCurrency(itemcontrato.vl_duplicata)}" style="text-align: right;"></td>
 
                     <td><a class="btn btn-danger btn-sm"
                            th:href="@{/item/excluir(item_id=${itemcontrato.id_duplicata}, vl_id=${itemcontrato.vl_duplicata}, contrato_cpf_cnpj=${contrato_cpf_cnpj}, contrato_valor=${contrato_valor})}">X</a>
+
 
                 </tr>
                 </tbody>
@@ -143,6 +91,12 @@
                 </tr>
                 </tfoot>
             </table>
+        </div>
+
+        <div class="alert alert-danger mt-3" th:if="${msgcontrato != null}">
+            <div>
+                <p th:text="${msgcontrato}"></p>
+            </div>
         </div>
 
 
@@ -161,12 +115,30 @@
                 <button type="submit" class="btn btn-dark">Adicionar Duplicata</button>
                 </br>
                 </br>
-                <a class="navbar-brand" th:href="@{/contrato/cadastrar}"> <button type="button" class="btn btn-danger">Cancelar</button></a>
-                <a class="navbar-brand" th:href="@{/contrato/persistircontrato(contrato_cpf_cnpj=${contrato_cpf_cnpj}, contrato_valor=${contrato_valor})}"> <button type="button" class="btn btn-success" id="botaosalvar">Salvar Contrato</button></a>
 
-<!--                colocar modal, aqui-->
-<!--                todas as informações serão perdidas-->
-<!--                Colocar botão Salvar contrato - Somente quando valor total bater TODO-->
+                <a type="button" class="btn btn-danger"
+                   data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                    Cancelar</a> <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop"
+                     data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">ATENÇÃO!</h5>
+                                <a type="button" class="btn-close"
+                                   data-bs-dismiss="modal" aria-label="Close"></a>
+                            </div>
+                            <div class="modal-body">Você tem certeza de que quer cancelar a inclusão do contrato? Todos os dados serão perdidos.</div>
+                            <div class="modal-footer">
+                                <a type="button" class="btn btn-secondary"
+                                   data-bs-dismiss="modal">Voltar</a>
+                                <a type="button" class="btn btn-danger" th:href="@{/contrato/cadastrar}">Continuar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="navbar-brand" th:href="@{/contrato/persistircontrato(contrato_cpf_cnpj=${contrato_cpf_cnpj}, contrato_valor=${contrato_valor})}"> <button type="button" class="btn btn-success" id="botaosalvar">Salvar Contrato</button></a>
             </form>
     </div>
         </div>
@@ -182,11 +154,11 @@
 
                 const valorcontrato = parseFloat(document.getElementById('valorcontrato').value);
                 const total = parseFloat(document.getElementById('total').value);
-                var msg = "";
-                if (total > valorcontrato) {
-                    var msg = "VLR ULTRAPASSADO";
-                }
-                document.getElementById('faltacadastrar').innerHTML = (valorcontrato - total).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}) + " " + msg;
+<!--                var msg = "";-->
+<!--                if (total > valorcontrato) {-->
+<!--                    var msg = "VLR ULTRAPASSADO";-->
+<!--                }-->
+                document.getElementById('faltacadastrar').innerHTML = (valorcontrato - total).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
 
                 if (total == valorcontrato) {
                     salvar.hidden = false;

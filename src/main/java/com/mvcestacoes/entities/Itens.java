@@ -1,7 +1,5 @@
 package com.mvcestacoes.entities;
 
-import java.util.List;
-
 public class Itens {
     private ItemContrato[] itens;
 

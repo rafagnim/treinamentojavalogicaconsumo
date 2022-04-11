@@ -8,16 +8,18 @@ public class Contrato {
     private Integer id;
     private String cpf_cnpj;
     private Double vl_contrato;
+    private String dataVencimento;
     public List<ItemContrato> itensContrato;
     public static List<ItemContrato> itens;
 
     public Contrato() {
     }
 
-    public Contrato(Integer id, String cpf_cnpj, Double vl_contrato) {
+    public Contrato(Integer id, String cpf_cnpj, Double vl_contrato, String dataVencimento) {
         this.id = id;
         this.cpf_cnpj = cpf_cnpj;
         this.vl_contrato = vl_contrato;
+        this.dataVencimento = dataVencimento;
     }
 
     public void addItemLista(ItemContrato i) {
@@ -48,20 +50,24 @@ public class Contrato {
         this.vl_contrato = vl_contrato;
     }
 
-//    public List<ItemContrato> getItens() {
-//        return itens;
-//    }
-//
-//    public void setItens(List<ItemContrato> itens) {
-//        this.itens = itens;
-//    }
-
-
     public List<ItemContrato> getItensContrato() {
         return itensContrato;
     }
 
     public void setItensContrato(List<ItemContrato> itensContrato) {
         this.itensContrato = itensContrato;
+    }
+
+    public String getDataVencimento() {
+        return dataVencimento;
+    }
+
+    public void setDataVencimento(String dataVencimento) {
+        this.dataVencimento = dataVencimento;
+    }
+
+    public String formataData() {
+        String[] data = this.dataVencimento.split("-");
+        return data[2] + "/" + data[1] + "/" + data[0];
     }
 }

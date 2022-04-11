@@ -88,7 +88,23 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
-<!--                        <button type="button" class="btn btn-primary">Save changes</button>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" tabindex="-1" id="alerta1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Estações iguais</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Selecione diferentes estações de Origem e Destino.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
                     </div>
                 </div>
             </div>
@@ -101,6 +117,15 @@
             function consultar() {
                    if(document.estacoes.estacaoOrigem.value== "" || document.estacoes.estacaoDestino.value == "") {
                         var myModal = new bootstrap.Modal(document.getElementById('alerta'), {
+                            keyboard: false
+                        });
+                        myModal.show();
+                        document.estacoes.estacaoOrigem.focus();
+                        return false;
+                    }
+
+                    if(document.estacoes.estacaoOrigem.value == document.estacoes.estacaoDestino.value) {
+                        var myModal = new bootstrap.Modal(document.getElementById('alerta1'), {
                             keyboard: false
                         });
                         myModal.show();

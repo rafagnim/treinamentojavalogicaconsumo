@@ -6,16 +6,15 @@
 
 <div layout:fragment="content">
 
-<!--    <div class="alert alert-dark mt-3" th:if="${msg != null}">-->
-<!--        <p th:text="${msg}"></p>-->
-<!--        <div>-->
-<!--            <a class="btn btn-dark btn-sm" th:href="@{/contrato/cadastrar}">Retornar</a>-->
-<!--        </div>-->
-<!--    </div>-->
-
     <div class="card" th:if="${msg == null}">
         <div class="card text-white bg-dark p-1 text-center">
             <p class="text-white">Cadastrar Contrato</p>
+        </div>
+
+        <div class="alert alert-danger mt-3" id="divmsgcontrato" >
+            <div>
+                <p id="msgcontrato" th:text="${msgcontrato}"></p>
+            </div>
         </div>
 
         <div class="card-body mt-3">
@@ -23,11 +22,16 @@
                   th:action="@{/contrato/cadastrar}">
                 <div class="form-group mb-3">
                     <label >CPF/CNPJ:</label>
-                    <input class="form-control" type="text" th:field="*{cpf_cnpj}" autofocus required/>
+                    <input class="form-control" type="number" th:field="*{cpf_cnpj}" th:value="*{cpf_cnpj}" min="100" step="1" id="cpfcnpj" autofocus required onfocusout="valida()">
                 </div>
                 <div class="form-group mb-3">
                     <label >Valor do contrato:</label>
                     <input class="form-control" type="number" th:field="*{vl_contrato}" min="0.01" step="0.01" required/>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label th:for="data">Data</label>
+                    <input class="form-control" name="data" type="date" th:field="*{dataVencimento}" required>
                 </div>
 
                 <button type="submit" class="btn btn-dark">Cadastrar</button>
@@ -35,6 +39,10 @@
         </div>
     </div>
 
-    <div layout:fragment="scripts"></div>
+    <div layout:fragment="scripts">
+        <script>
+
+        </script>
+    </div>
 </div>
 </html>

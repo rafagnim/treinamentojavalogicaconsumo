@@ -99,7 +99,105 @@
 <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <div layout:fragment="scripts"></div>
-</script>
+    <script>
+            const divmsgcontratoElemento = document.getElementById('divmsgcontrato')
+            divmsgcontratoElemento.style.display="none";
+
+            function valida() {
+                const cpfcnpjElement = document.getElementById('cpfcnpj');
+                const cpfcnpj = cpfcnpjElement.value;
+                console.log(cpfcnpj);
+
+                console.log(validaCPF(cpfcnpj));
+                console.log(validaCNPJ(cpfcnpj));
+
+                const msgcontratoElemento = document.getElementById('msgcontrato');
+                const divmsgcontratoElemento = document.getElementById('divmsgcontrato');
+
+                //msgcontratoElemento.innerHTML = "olá pessoal";
+                //console.log(msgcontratoElemento);
+                if (validaCPF(cpfcnpj) || validaCNPJ(cpfcnpj)) {
+                    divmsgcontratoElemento.style.display="none";
+                } else {
+                    divmsgcontratoElemento.style.display="block";
+                    msgcontratoElemento.innerHTML = "CPF/CNPJ inválido!";
+                    cpfcnpjElement.focus();
+                }
+            }
+
+            function validaCPF(cpf) {
+                if (cpf.length < 11) {
+                    var digitosFaltantes = 11-cpf.length;
+                    var acrescentar = "";
+                    for (let i = 0; i < digitosFaltantes; i++) {
+                        acrescentar += "0";
+                    }
+                    var cpf = acrescentar + cpf;
+                }
+
+                try {
+                    var caracteresNumericos = cpf.substring(0, 9).split("");
+                    var soma1 = 0, soma2 = 0;
+                    for (let i = 0, j = 10; i < 9; i++, j--) {
+                        soma1 += j * parseInt(caracteresNumericos[i]);
+                        soma2 += (j + 1) * parseInt(caracteresNumericos[i]);
+                    }
+                    var primeiroDigito = 11 - (soma1 % 11);
+                    if (primeiroDigito > 9) primeiroDigito = 0;
+                        soma2 += primeiroDigito * 2;
+                    var segundoDigito = 11 - (soma2 % 11);
+                        if (segundoDigito > 9) segundoDigito = 0;
+
+                    var digitos = parseInt(cpf.substring(9));
+
+                    if (digitos == primeiroDigito * 10 + segundoDigito) {
+                     return true;
+                    }
+                }catch (e) {
+                    return false;
+                }
+                return false;
+            }
+
+
+            function validaCNPJ(cnpj) {
+                if (cnpj.length < 14) {
+                    var digitosFaltantes = 14-cnpj.length;
+                    var acrescentar = "";
+                    for (let i = 0; i < digitosFaltantes; i++) {
+                    acrescentar += "0";
+                    }
+                cnpj = acrescentar + cnpj;
+                }
+
+                try {
+                    var caracteresNumericos = cnpj.substring(0, 12).split("");
+                    var soma1 = 0, soma2 = 0;
+
+                    for (let i = 1, j = 6, k = 5; i <= 12; i++, j++, k++) {
+                        if (i == 5) j = 2;
+                        soma1 += j * parseInt(caracteresNumericos[i-1]);
+                        if (i == 6) k = 2;
+                        soma2 += k * parseInt(caracteresNumericos[i-1]);
+                    }
+
+                    var primeiroDigito = (soma1 % 11);
+                    if (primeiroDigito > 9) primeiroDigito = 0;
+                        soma2 += primeiroDigito * 9;
+                    var segundoDigito = (soma2 % 11);
+                    if (segundoDigito > 9) segundoDigito = 0;
+
+                    var digitos = parseInt(cnpj.substring(12));
+
+                    if (digitos == primeiroDigito * 10 + segundoDigito) {
+                        return true;
+                    }
+                }catch (e) {
+                    return false;
+                }
+            return false;
+            }
+    </script>
 
 </body>
 </html>
