@@ -90,51 +90,8 @@ public class ItemController {
     @RequestMapping(path = "adicionarpreenchido", method = RequestMethod.POST)
     public ModelAndView adicionarItemPreenchido(ItemContrato item, String contrato_cpf_cnpj, String contrato_valor, RedirectAttributes redirectAttributes) {
         ModelAndView mv = new ModelAndView("redirect:/item/adicionar");
-        //ItemContrato item, @RequestParam(required = false) String it, String contrato_cpf_cnpj, @RequestParam(required = false) String contrato_valor
-
         Contrato.itens.add(item);
-//        itens.add(contrato);
-
-//        if (contrato.getItens() != null) {
-//            List<ItemContratoDTO> itens = contrato.getItens();
-//            itens.add(contrato);
-//            contrato.setItens(itens);
-//        } else {
-//            List<ItemContratoDTO> itens = new ArrayList<>();
-//            itens.add(contrato);
-//            contrato.setItens(itens);
-//        }
-
         try {
-            //var contrato = contratoService.contratoPorID(item.getContrato_id()).block();
-            //var contrato = contratoService.atualizaItens(item, item.getContrato_id()).block();
-            //criar buscar por CPFCNNPF TODO
-
-            //List<ItemContrato> itens = new ArrayList<>();
-
-            //Integer contrato_id = contrato.getId();
-
-//            if (it != "") {
-//                String it1[] = it.split(",");
-//                for (int i = 0; i < it1.length; i +=4) {
-//                    int id = i/4;
-//                    String id_duplicata = it1[i+1].substring(15 ,it1[i+1].length() - 1);
-//                    Double vl_duplicata = Double.parseDouble(it1[i+2].substring(14));
-//                    itens.add (new ItemContrato (id, id_duplicata, vl_duplicata));
-//                }
-//                item.setId(it1.length/4);
-//            } else {
-//                item.setId(0);
-//            }
-
-
-            //itens.add(item);
-
-            //contrato.addItemLista(item);
-
-            //redirectAttributes.addFlashAttribute("contrato", contrato);
-            //redirectAttributes.addFlashAttribute("itens", itens);
-            //redirectAttributes.addFlashAttribute("contrato_id", item.getContrato_id());
             redirectAttributes.addFlashAttribute("itens", Contrato.itens);
             redirectAttributes.addFlashAttribute("contrato_cpf_cnpj", contrato_cpf_cnpj);
             redirectAttributes.addFlashAttribute("contrato_valor", contrato_valor);
@@ -143,40 +100,18 @@ public class ItemController {
             //mv.addObject("msg", (r.getMessage().split("\\[")[1]).split("\\]")[0]);
             System.out.println(r.getMessage());
         }
-
         return mv;
     }
 
     @RequestMapping(path = "excluir", method = RequestMethod.GET)
-    public ModelAndView excluir(Integer item_id, String it, RedirectAttributes redirectAttributes) {
+    public ModelAndView excluir(String item_id, String vl_id, String contrato_cpf_cnpj, String contrato_valor, RedirectAttributes redirectAttributes) {
         ModelAndView mv = new ModelAndView("redirect:/item/adicionar");
-//
-//        var contrato = contratoService.excluiItem(item_id).block();
-
-//        var itens = itemService.listarItens(contrato.getId())
-//                .flatMapIterable(i -> {return Arrays.asList(i);})
-//                .toIterable();
-
-        List<ItemContrato> itens = new ArrayList<>();
-        String it1[] = it.split(",");
-        Integer contrato_id = 0;
-        for (int i = 0; i < it1.length; i +=4) {
-            int id = i/4;
-            String id_duplicata = it1[i+1].substring(15 ,it1[i+1].length() - 1);
-            Double vl_duplicata = Double.parseDouble(it1[i+2].substring(14));
-            contrato_id = Integer.parseInt(it1[i+3].substring(13, it1[i+3].length() - 1 ));
-            itens.add (new ItemContrato (id, id_duplicata, vl_duplicata));
-        }
-
-        List<ItemContrato> itensFiltrados = itens.stream().filter(i -> i.getId() != item_id).collect(Collectors.toList());
-
-        var contrato = contratoService.contratoPorID(contrato_id).block();
-
-        //redirectAttributes.addFlashAttribute("contrato_id", contrato_id);
-        redirectAttributes.addFlashAttribute("listaItens", itensFiltrados);
-        redirectAttributes.addFlashAttribute("contrato_cpf_cnpj", contrato.getCpf_cnpj());
-
+        Contrato.itens = Contrato.itens.stream()
+                .filter(i -> !(i.getId_duplicata().equals(item_id) && i.getVl_duplicata() == Double.parseDouble(vl_id)))
+                .collect(Collectors.toList());
+        redirectAttributes.addFlashAttribute("itens", Contrato.itens);
+        redirectAttributes.addFlashAttribute("contrato_cpf_cnpj", contrato_cpf_cnpj);
+        redirectAttributes.addFlashAttribute("contrato_valor", contrato_valor);
         return mv;
     }
-
 }

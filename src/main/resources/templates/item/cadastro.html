@@ -78,13 +78,19 @@
 <!--            </table>-->
 <!--        </div>-->
 
-        <div class="card-header">
+        <div class="card-header mb-2">
 
             <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>
-                            <p class="text-dark">Contrato: </p>
+                            <p class="text-dark">Contrato</p>
+                        </th>
+                        <th>
+                            <p class="text-dark" style="text-align: right;">Valor Total</p>
+                        </th>
+                        <th>
+                            <p class="text-dark" style="text-align: right;">Falta Cadastrar</p>
                         </th>
                     </tr>
                 </thead>
@@ -94,7 +100,11 @@
                             <p class="text-dark" th:text="${contrato_cpf_cnpj}"></p>
                         </th>
                         <th>
-                            <p class="text-dark" th:text="${#numbers.formatCurrency(contrato_vl_contrato)}"></p>
+                            <p class="text-dark" th:text="${#numbers.formatCurrency(contrato_valor)}" style="text-align: right;"></p>
+                            <input type="hidden" th:value="${contrato_valor}" id="valorcontrato">
+                        </th>
+                        <th>
+                            <p class="text-danger" id="faltacadastrar" th:text="${#numbers.formatCurrency(contrato_valor)}" style="text-align: right;">TESTE</p>
                         </th>
                     </tr>
                 </tbody>
@@ -102,13 +112,14 @@
         </div>
 
 
-        <div class="form-group mb-3" th:if="${not #lists.isEmpty(itens)}">
+        <div class="form-group" th:if="${not #lists.isEmpty(itens)}">
 
             <table class="table table-striped">
                 <thead>
                 <tr>
                     <th>Identificador da Duplicata</th>
                     <th style="text-align: right;">Valor da Duplicata</th>
+                    <th colspan="1"></th>
                 </tr>
                 </thead>
 
@@ -118,60 +129,71 @@
                     <td th:text="${itemcontrato.id_duplicata}"></td>
                     <td th:text="${#numbers.formatCurrency(itemcontrato.vl_duplicata)}" style="text-align: right;"></td>
 
-<!--                    <td><a class="btn btn-danger btn-sm"-->
-<!--                           th:href="@{/item/excluir(item_id=${itemcontrato.id}, it=${listaItens})}">X</a>-->
+                    <td><a class="btn btn-danger btn-sm"
+                           th:href="@{/item/excluir(item_id=${itemcontrato.id_duplicata}, vl_id=${itemcontrato.vl_duplicata}, contrato_cpf_cnpj=${contrato_cpf_cnpj}, contrato_valor=${contrato_valor})}">X</a>
 
                 </tr>
                 </tbody>
                 <tfoot>
                 <tr>
-                    <td colspan="2">Total</td>
+                    <td>Total</td>
                     <td th:text="${#numbers.formatCurrency(#aggregates.sum(itens.![vl_duplicata]))}" style="text-align: right;"></td>
+                    <input type="hidden" th:value="${#aggregates.sum(itens.![vl_duplicata])}" id="total">
+                    <td colspan="1"></td>
                 </tr>
                 </tfoot>
             </table>
         </div>
 
 
-        <div class="card-body mt-3" th:if="${contrato_cpf_cnpj != null}" >
+        <div class="card-body border border-2 border border-danger" th:if="${contrato_cpf_cnpj != null}">
             <form method="POST" th:object="${itemcontrato}"
-            th:action="@{/item/adicionarpreenchido(contrato_cpf_cnpj=${contrato_cpf_cnpj}, contrato_valor=${contrato_valor})}" name="itemcontrato">
+            th:action="@{/item/adicionarpreenchido(contrato_cpf_cnpj=${contrato_cpf_cnpj}, contrato_valor=${contrato_valor})}" name="itemcontrato" id="incluiitem">
 
-                <th>
-                    <p class="text-dark" th:text="${contrato_cpf_cnpj}"></p>
-                </th>
-                <th>
-                    <p class="text-dark" th:text="${#numbers.formatCurrency(contrato_valor)}"></p>
-                </th>
-
-
-                <div class="form-group mb-3">
-
-<!--                    <input type="hidden" th:field="*{contrato.cpf_cnpj}">-->
-
-<!--                    <input type="hidden" th:field="*{contrato.vl_contrato}">-->
-
+                <div class="form-group mb-1">
                     <label >Identificador da Duplicata:</label>
-                    <input class="form-control" type="text" th:field="*{id_duplicata}" th:value="*{id_duplicata}" id="identificador" required/>
-
+                    <input class="form-control" type="text" th:field="*{id_duplicata}" th:value="*{id_duplicata}" id="identificador" autofocus autocomplete="off" required/>
                 </div>
-                <div class="form-group mb-3">
+                <div class="form-group mb-1">
                     <label >Valor da duplicata:</label>
                     <input class="form-control" type="number" th:field="*{vl_duplicata}" min="0.01" step="0.01" th:value="*{vl_duplicata}" id="valor"  name="valor" required/>
                 </div>
                 <button type="submit" class="btn btn-dark">Adicionar Duplicata</button>
                 </br>
                 </br>
-                <a class="navbar-brand" th:href="@{/item/adicionar}"> <button type="button" class="btn btn-secondary" >Cancelar</button></a>
+                <a class="navbar-brand" th:href="@{/contrato/cadastrar}"> <button type="button" class="btn btn-danger">Cancelar</button></a>
+                <a class="navbar-brand" th:href="@{/contrato/persistircontrato(contrato_cpf_cnpj=${contrato_cpf_cnpj}, contrato_valor=${contrato_valor})}"> <button type="button" class="btn btn-success" id="botaosalvar">Salvar Contrato</button></a>
+
 <!--                colocar modal, aqui-->
 <!--                todas as informações serão perdidas-->
+<!--                Colocar botão Salvar contrato - Somente quando valor total bater TODO-->
             </form>
-
-        </div>
     </div>
+        </div>
 
     <div layout:fragment="scripts">
         <script>
+            window.scrollTo(0,document.body.scrollHeight);
+
+            const salvar = document.getElementById('botaosalvar');
+            salvar.hidden = true;
+
+            if (document.getElementById('total')) {
+
+                const valorcontrato = parseFloat(document.getElementById('valorcontrato').value);
+                const total = parseFloat(document.getElementById('total').value);
+                var msg = "";
+                if (total > valorcontrato) {
+                    var msg = "VLR ULTRAPASSADO";
+                }
+                document.getElementById('faltacadastrar').innerHTML = (valorcontrato - total).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}) + " " + msg;
+
+                if (total == valorcontrato) {
+                    salvar.hidden = false;
+                } else {
+                    salvar.hidden = true;
+                }
+            }
         </script>
     </div>
 </div>

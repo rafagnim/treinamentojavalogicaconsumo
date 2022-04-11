@@ -8,6 +8,7 @@ public class Contrato {
     private Integer id;
     private String cpf_cnpj;
     private Double vl_contrato;
+    public List<ItemContrato> itensContrato;
     public static List<ItemContrato> itens;
 
     public Contrato() {
@@ -47,11 +48,20 @@ public class Contrato {
         this.vl_contrato = vl_contrato;
     }
 
-    public List<ItemContrato> getItens() {
-        return itens;
+//    public List<ItemContrato> getItens() {
+//        return itens;
+//    }
+//
+//    public void setItens(List<ItemContrato> itens) {
+//        this.itens = itens;
+//    }
+
+
+    public List<ItemContrato> getItensContrato() {
+        return itensContrato;
     }
 
-    public void setItens(List<ItemContrato> itens) {
-        this.itens = itens;
+    public void setItensContrato(List<ItemContrato> itensContrato) {
+        this.itensContrato = itensContrato;
     }
 }

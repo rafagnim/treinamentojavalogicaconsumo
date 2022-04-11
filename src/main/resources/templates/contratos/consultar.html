@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeLeaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout.html}">
+<meta charset="UTF-8">
+
+<div layout:fragment="content">
+
+    <!--    <div class="alert alert-dark mt-3" th:if="${msg != null}"-->
+    <!--         th:text="${msg}">-->
+    <!--    </div>-->
+
+
+    <div class="alert alert-dark mt-3" th:if="${msg != null}">
+        <div>
+            <p th:text="${msg}"></p>
+        </div>
+    </div>
+    <div th:if="${msg != null}">
+        <a class="btn btn-dark btn-sm" th:href="@{/contrato/cadastrar}">Retornar</a>
+    </div>
+
+    <div class="card" th:if="${msg == null}">
+        <div class="card text-white bg-dark p-1 text-center">
+            <p class="text-white">Itens do Contrato</p>
+        </div>
+
+                <div th:if="${#lists.isEmpty(itens)}">
+                <div class="card-header">
+                    <p class="text-dark">Filtrar Contrato</p>
+                </div>
+
+                <div class="card-body mt-3">
+                    <form method="GET" th:action="@{/item/buscarcontrato}">
+                        <div class="form-group mb-3">
+                            <label>CPF ou CNPJ</label>
+                            <input class="form-control" type="text" name="cpf_cnpj" th:value="${cpf_cnpj}">
+                        </div>
+                        <button type="submit" class="btn btn-dark">Pesquisar
+                        </button>
+                    </form>
+                </div>
+
+                </div>
+
+        <div th:if="${not #lists.isEmpty(itens)}">
+            <div class="card-header">
+                <p class="text-dark">Contrato Salvo com Sucesso</p>
+            </div>
+
+<!--            <div class="card-body mt-3">-->
+<!--                <form method="GET" th:action="@{/item/buscarcontrato}">-->
+<!--                    <div class="form-group mb-3">-->
+<!--                        <label>CPF ou CNPJ</label>-->
+<!--                        <input class="form-control" type="text" name="cpf_cnpj" th:value="${cpf_cnpj}">-->
+<!--                    </div>-->
+<!--                    <button type="submit" class="btn btn-dark">Pesquisar-->
+<!--                    </button>-->
+<!--                </form>-->
+<!--            </div>-->
+
+        </div>
+
+
+
+        <!--        <div class="form-group mb-3" th:if="${not #lists.isEmpty(listaContratos)}">-->
+        <!--            <div class="card-header">-->
+        <!--                <p class="text-dark">Contrato: </p>-->
+        <!--                <p class="text-dark" th:text="${contrato_cpf_cnpj}"></p>-->
+        <!--            </div>-->
+        <!--            <table class="table table-striped">-->
+        <!--                <thead>-->
+        <!--                <tr>-->
+        <!--                    <th>Id</th>-->
+        <!--                    <th>CPF/CNPJ</th>-->
+        <!--                    <th style="text-align: right;">Valor Total</th>-->
+        <!--                </tr>-->
+        <!--                </thead>-->
+
+        <!--                <tbody>-->
+        <!--                <tr th:each="contrato : ${listaContratos}">-->
+        <!--                    <td th:text="${contrato.id}"></td>-->
+        <!--                    <td th:text="${contrato.cpf_cnpj}"></td>-->
+        <!--                    <td th:text="${contrato.vl_contrato}" style="text-align: right;"></td>-->
+        <!--                    <td>-->
+        <!--                        -->
+        <!--                        <a class="btn btn-dark btn-sm"-->
+        <!--                           th:href="@{/item/adicionar(id=${contrato.id})}">Cadastrar/Adicionar Duplicatas</a>-->
+
+        <!--                </tr>-->
+        <!--                </tbody>-->
+        <!--            </table>-->
+        <!--        </div>-->
+
+        <div class="card-header mb-2">
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>
+                        <p class="text-dark">Contrato</p>
+                    </th>
+                    <th>
+                        <p class="text-dark" style="text-align: right;">Valor Total</p>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>
+                        <p class="text-dark" th:text="${contrato.cpf_cnpj}"></p>
+                    </th>
+                    <th>
+                        <p class="text-dark" th:text="${#numbers.formatCurrency(contrato.vl_contrato)}" style="text-align: right;"></p>
+                        <input type="hidden" th:value="${contrato.vl_contrato}" id="valorcontrato">
+                    </th>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="form-group" th:if="${not #lists.isEmpty(itens)}">
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Identificador da Duplicata</th>
+                    <th style="text-align: right;">Valor da Duplicata</th>
+                    <th colspan="1"></th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="itemcontrato : ${itens}" id="itens">
+                    <!--                    <td th:text="${itemcontrato.id}"></td>-->
+                    <td th:text="${itemcontrato.id_duplicata}"></td>
+                    <td th:text="${#numbers.formatCurrency(itemcontrato.vl_duplicata)}" style="text-align: right;"></td>
+
+                    <td><a class="btn btn-danger btn-sm"
+                           th:href="@{/item/excluir(item_id=${itemcontrato.id_duplicata}, vl_id=${itemcontrato.vl_duplicata}, contrato_cpf_cnpj=${contrato_cpf_cnpj}, contrato_valor=${contrato_valor})}">X</a>
+
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td>Total</td>
+                    <td th:text="${#numbers.formatCurrency(#aggregates.sum(itens.![vl_duplicata]))}" style="text-align: right;"></td>
+                    <input type="hidden" th:value="${#aggregates.sum(itens.![vl_duplicata])}" id="total">
+                    <td colspan="1"></td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div layout:fragment="scripts">
+        <script>
+
+        </script>
+    </div>
+</div>
+</html>
