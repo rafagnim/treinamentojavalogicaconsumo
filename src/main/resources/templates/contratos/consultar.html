@@ -6,7 +6,7 @@
 
 <div layout:fragment="content">
 
-    <div class="alert alert-danger mt-3" th:if="${msg != null}">
+    <div class="alert alert-success mt-3" th:if="${msg != null}">
         <div>
             <p th:text="${msg}"></p>
         </div>
@@ -52,6 +52,7 @@
                         <tr>
                             <th>Id</th>
                             <th>CPF/CNPJ</th>
+                            <th>Vencimento</th>
                             <th style="text-align: right;">Valor Total</th>
                         </tr>
                         </thead>
@@ -60,6 +61,7 @@
                         <tr th:each="contrato : ${contratos}">
                             <td th:text="${contrato.id}"></td>
                             <td th:text="${contrato.cpf_cnpj}"></td>
+                            <td th:text="${contrato.dataVencimento}"></td>
                             <td th:text="${contrato.vl_contrato}" style="text-align: right;"></td>
                             <td>
 
@@ -83,6 +85,9 @@
                         <p class="text-dark">Contrato</p>
                     </th>
                     <th>
+                        <p class="text-dark">Data de Vencimento</p>
+                    </th>
+                    <th>
                         <p class="text-dark" style="text-align: right;">Valor Total</p>
                     </th>
                 </tr>
@@ -91,6 +96,9 @@
                 <tr>
                     <th>
                         <p class="text-dark" th:text="${contrato.cpf_cnpj}"></p>
+                    </th>
+                    <th>
+                        <p class="text-dark" th:text="${contrato.dataVencimento}"></p>
                     </th>
                     <th>
                         <p class="text-dark" th:text="${#numbers.formatCurrency(contrato.vl_contrato)}" style="text-align: right;"></p>
@@ -108,8 +116,8 @@
                 <thead>
                 <tr>
                     <th>Identificador da Duplicata</th>
+                    <th>Vencimento da Duplicata</th>
                     <th style="text-align: right;">Valor da Duplicata</th>
-                    <th colspan="1"></th>
                 </tr>
                 </thead>
 
@@ -117,6 +125,7 @@
                 <tr th:each="itemcontrato : ${itens}" id="itens">
                     <!--                    <td th:text="${itemcontrato.id}"></td>-->
                     <td th:text="${itemcontrato.id_duplicata}"></td>
+                    <td th:text="${itemcontrato.dataVencimento}"></td>
                     <td th:text="${#numbers.formatCurrency(itemcontrato.vl_duplicata)}" style="text-align: right;"></td>
 
                 </tr>
@@ -124,9 +133,9 @@
                 <tfoot>
                 <tr>
                     <td>Total</td>
+                    <td colspan="1"></td>
                     <td th:text="${#numbers.formatCurrency(#aggregates.sum(itens.![vl_duplicata]))}" style="text-align: right;"></td>
                     <input type="hidden" th:value="${#aggregates.sum(itens.![vl_duplicata])}" id="total">
-                    <td colspan="1"></td>
                 </tr>
                 </tfoot>
             </table>

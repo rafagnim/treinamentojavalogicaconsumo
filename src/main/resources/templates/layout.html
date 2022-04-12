@@ -106,16 +106,8 @@
             function valida() {
                 const cpfcnpjElement = document.getElementById('cpfcnpj');
                 const cpfcnpj = cpfcnpjElement.value;
-                console.log(cpfcnpj);
-
-                console.log(validaCPF(cpfcnpj));
-                console.log(validaCNPJ(cpfcnpj));
-
                 const msgcontratoElemento = document.getElementById('msgcontrato');
                 const divmsgcontratoElemento = document.getElementById('divmsgcontrato');
-
-                //msgcontratoElemento.innerHTML = "olá pessoal";
-                //console.log(msgcontratoElemento);
                 if (validaCPF(cpfcnpj) || validaCNPJ(cpfcnpj)) {
                     divmsgcontratoElemento.style.display="none";
                 } else {
@@ -196,6 +188,48 @@
                     return false;
                 }
             return false;
+            }
+
+            function validaData() {
+                const dataContratoElemento = document.getElementById('datacontrato');
+                const dataContratoDigitada = dataContratoElemento.value;
+                const dataTratada = dataContratoDigitada.replace('-','/').replace('-','/');
+                const dataContrato = new Date(dataTratada);
+                console.log(dataContrato);
+                var dataHoje = new Date();
+                //var dataTimeHoje = new Date();
+                //var dataHoje = new Date(dataTimeHoje.getFullYear().toString(), (dataTimeHoje.getMonth + 1).toString(), dataTimeHoje.getDate().toString());
+                console.log(dataHoje);
+                const dataMinimaContrato = adicionaDias(dataHoje, 30);
+                console.log(dataMinimaContrato);
+
+                if (dataContrato >= dataMinimaContrato) {
+                    console.log("OK");
+                } else {
+                    console.log("NAO OK");
+                }
+
+                const dia = dataMinimaContrato.getDate() > 9 ? dataMinimaContrato.getDate() : "0" + dataMinimaContrato.getDate();
+                const mes = (dataMinimaContrato.getMonth() + 1) > 9 ? (dataMinimaContrato.getMonth() + 1) : "0" + (dataMinimaContrato.getMonth() + 1);
+                const dataMinimaContratoView = dia + "/" + (mes) +  "/" + dataMinimaContrato.getFullYear();
+                console.log(dataMinimaContratoView);
+
+                const msgcontratoElemento = document.getElementById('msgcontrato');
+                const divmsgcontratoElemento = document.getElementById('divmsgcontrato');
+
+                if (dataContrato >= dataMinimaContrato) {
+                    divmsgcontratoElemento.style.display="none";
+                } else {
+                    divmsgcontratoElemento.style.display="block";
+                    msgcontratoElemento.innerHTML = "Prazo mínimo de vencimento: 30 dias (" + dataMinimaContratoView + ").";
+                    dataContratoElemento.focus();
+                }
+            }
+
+            function adicionaDias(data, dias) {
+                var dataRetorno = new Date(data);
+                dataRetorno.setDate(data.getDate() + dias);
+                return dataRetorno;
             }
     </script>
 

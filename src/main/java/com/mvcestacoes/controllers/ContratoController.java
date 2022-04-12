@@ -1,7 +1,6 @@
 package com.mvcestacoes.controllers;
 
-import com.mvcestacoes.entities.Contrato;
-import com.mvcestacoes.entities.Emprestimo;
+import com.mvcestacoes.entities.*;
 import com.mvcestacoes.services.ContratoService;
 import com.mvcestacoes.services.ItemService;
 import org.springframework.stereotype.Controller;
@@ -14,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 
@@ -61,13 +61,28 @@ public class ContratoController {
 
         ModelAndView mv = new ModelAndView("contratos/consultar.html");
         try {
-            Contrato c = new Contrato(null, contrato_cpf_cnpj, Double.parseDouble(contrato_valor), dataVencimento);
-            var it = Contrato.itens;
-            c.setItensContrato(Contrato.itens);
+            Integer[] dataSplit = Contrato.desformataData(dataVencimento);
+            LocalDate data = LocalDate.of(dataSplit[0], dataSplit[1], dataSplit[2]);
+            ContratoAPI c = new ContratoAPI(null, contrato_cpf_cnpj, data, Double.parseDouble(contrato_valor));
+            var it = Contrato.itens.stream().map(i-> {
+                Integer[] dataItemSplit = ItemContrato.desformataData(i.getDataVencimento());
+                LocalDate dataItem = LocalDate.of(dataItemSplit[0], dataItemSplit[1], dataItemSplit[2]);
+                return new ItemContratoAPI(null, i.getId_duplicata(), dataItem, i.getVl_duplicata());
+            }).collect(Collectors.toList());
+            c.setItensContrato(it);
             var contratoSalvo = contratoService.cadastrarContrato(c).block();
+            Contrato contratoRetorno = new Contrato (contratoSalvo.getId(), contratoSalvo.getCpf_cnpj(), contratoSalvo.getVl_contrato(), Contrato.formataData(contratoSalvo.getDataVencimento()));
+
             Contrato.itens = new ArrayList<>();
-            mv.addObject("itens", contratoSalvo.getItensContrato());
-            mv.addObject("contrato", contratoSalvo);
+            var itensRetorno = contratoSalvo.getItensContrato().stream().map(i-> {
+                String dia = i.getDataVencimento().getDayOfMonth() > 9 ? String.valueOf(i.getDataVencimento().getDayOfMonth()) : "0" + i.getDataVencimento().getDayOfMonth();
+                String mes = i.getDataVencimento().getMonthValue() > 9 ? String.valueOf(i.getDataVencimento().getMonthValue()) : "0" + i.getDataVencimento().getMonthValue();
+                String dataVencimentoItem = dia + "/" + mes + "/" + i.getDataVencimento().getYear();
+                return new ItemContrato(i.getId(), i.getId_duplicata(), dataVencimentoItem, i.getVl_duplicata());
+            }).collect(Collectors.toList());
+
+            mv.addObject("itens", itensRetorno);
+            mv.addObject("contrato", contratoRetorno);
             mv.addObject("msg", "Contrato cadastrado com sucesso!");
             } catch (RuntimeException r) {
             redirectAttributes.addFlashAttribute("msg", (r.getMessage().split("\\[")[1]).split("\\]")[0]);
@@ -83,9 +98,20 @@ public class ContratoController {
             if (id != null) {
                 var itens = itemService.listarItens(id)
                         .toStream().collect(Collectors.toList());
-                var contrato = contratoService.contratoPorID(id).block();
-                mv.addObject("itens", itens);
-                mv.addObject("contrato", contrato);
+                var contratoSalvo = contratoService.contratoPorID(id).block();
+
+                Contrato contratoRetorno = new Contrato (contratoSalvo.getId(), contratoSalvo.getCpf_cnpj(), contratoSalvo.getVl_contrato(), Contrato.formataData(contratoSalvo.getDataVencimento()));
+
+                var itensRetorno = contratoSalvo.getItensContrato().stream().map(i-> {
+                    String dia = i.getDataVencimento().getDayOfMonth() > 9 ? String.valueOf(i.getDataVencimento().getDayOfMonth()) : "0" + i.getDataVencimento().getDayOfMonth();
+                    String mes = i.getDataVencimento().getMonthValue() > 9 ? String.valueOf(i.getDataVencimento().getMonthValue()) : "0" + i.getDataVencimento().getMonthValue();
+                    String dataVencimentoItem = dia + "/" + mes + "/" + i.getDataVencimento().getYear();
+                    return new ItemContrato(i.getId(), i.getId_duplicata(), dataVencimentoItem, i.getVl_duplicata());
+                }).collect(Collectors.toList());
+
+
+                mv.addObject("itens", itensRetorno);
+                mv.addObject("contrato", contratoRetorno);
             }
         } catch (RuntimeException r) {
             mv.addObject("msg", (r.getMessage().split("\\[")[1]).split("\\]")[0]);

@@ -1,5 +1,6 @@
 package com.mvcestacoes.entities;
 
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -69,5 +70,22 @@ public class Contrato {
     public String formataData() {
         String[] data = this.dataVencimento.split("-");
         return data[2] + "/" + data[1] + "/" + data[0];
+    }
+
+    public static String formataData(LocalDate data) {
+
+        String dia = data.getDayOfMonth() > 9 ? String.valueOf(data.getDayOfMonth()) : "0" + data.getDayOfMonth();
+        String mes = data.getMonthValue() > 9 ? String.valueOf(data.getMonthValue()) : "0" + data.getMonthValue();
+        String dataVencimentoRetorno = dia + "/" + mes + "/" + data.getYear();
+        return dataVencimentoRetorno;
+    }
+
+    public static Integer[] desformataData(String d) {
+        String[] data = d.split("/");
+        Integer[] retorno = new Integer[3];
+        retorno[0] = Integer.parseInt(data[2]);
+        retorno[1] = Integer.parseInt(data[1]);
+        retorno[2] = Integer.parseInt(data[0]);
+        return retorno;
     }
 }

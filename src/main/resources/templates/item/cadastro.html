@@ -29,7 +29,7 @@
                             <p class="text-dark">Contrato</p>
                         </th>
                         <th>
-                            <p class="text-dark">Data Vencimento</p>
+                            <p class="text-dark">Vencimento do Contrato</p>
                         </th>
                         <th>
                             <p class="text-dark" style="text-align: right;">Valor Total</p>
@@ -66,6 +66,7 @@
                 <thead>
                 <tr>
                     <th>Identificador da Duplicata</th>
+                    <th>Vencimento da Duplicata</th>
                     <th style="text-align: right;">Valor da Duplicata</th>
                     <th colspan="1"></th>
                 </tr>
@@ -74,10 +75,11 @@
                 <tbody>
                 <tr th:each="itemcontrato : ${itens}" id="itens">
                     <td th:text="${itemcontrato.id_duplicata}"></td>
+                    <td th:text="${itemcontrato.dataVencimento}"></td>
                     <td th:text="${#numbers.formatCurrency(itemcontrato.vl_duplicata)}" style="text-align: right;"></td>
 
                     <td><a class="btn btn-danger btn-sm"
-                           th:href="@{/item/excluir(item_id=${itemcontrato.id_duplicata}, vl_id=${itemcontrato.vl_duplicata}, contrato_cpf_cnpj=${contrato_cpf_cnpj}, contrato_valor=${contrato_valor})}">X</a>
+                           th:href="@{/item/excluir(item_id=${itemcontrato.id_duplicata}, vl_id=${itemcontrato.vl_duplicata}, contrato_cpf_cnpj=${contrato_cpf_cnpj}, dataVencimento=${contrato_dataVencimento},contrato_valor=${contrato_valor})}">X</a>
 
 
                 </tr>
@@ -102,12 +104,19 @@
 
         <div class="card-body border border-2 border border-danger" th:if="${contrato_cpf_cnpj != null}">
             <form method="POST" th:object="${itemcontrato}"
-            th:action="@{/item/adicionarpreenchido(contrato_cpf_cnpj=${contrato_cpf_cnpj}, contrato_valor=${contrato_valor})}" name="itemcontrato" id="incluiitem">
+            th:action="@{/item/adicionarpreenchido(contrato_cpf_cnpj=${contrato_cpf_cnpj}, dataVencimentoContrato=${contrato_dataVencimento} ,contrato_valor=${contrato_valor})}" name="itemcontrato" id="incluiitem">
 
                 <div class="form-group mb-1">
                     <label >Identificador da Duplicata:</label>
                     <input class="form-control" type="text" th:field="*{id_duplicata}" th:value="*{id_duplicata}" id="identificador" autofocus autocomplete="off" required/>
                 </div>
+
+                <div class="form-group mb-1">
+                    <label >Vencimento:</label>
+                    <input class="form-control" type="date" th:field="*{dataVencimento}" min="0.01" step="0.01" th:value="*{dataVencimento}" id="vencimentoDP"  name="vencimentoDP" required/>
+                </div>
+
+
                 <div class="form-group mb-1">
                     <label >Valor da duplicata:</label>
                     <input class="form-control" type="number" th:field="*{vl_duplicata}" min="0.01" step="0.01" th:value="*{vl_duplicata}" id="valor"  name="valor" required/>
@@ -138,7 +147,7 @@
                         </div>
                     </div>
                 </div>
-                <a class="navbar-brand" th:href="@{/contrato/persistircontrato(contrato_cpf_cnpj=${contrato_cpf_cnpj}, contrato_valor=${contrato_valor})}"> <button type="button" class="btn btn-success" id="botaosalvar">Salvar Contrato</button></a>
+                <a class="navbar-brand" th:href="@{/contrato/persistircontrato(contrato_cpf_cnpj=${contrato_cpf_cnpj}, dataVencimento=${contrato_dataVencimento}, contrato_valor=${contrato_valor})}"> <button type="button" class="btn btn-success" id="botaosalvar">Salvar Contrato</button></a>
             </form>
     </div>
         </div>
