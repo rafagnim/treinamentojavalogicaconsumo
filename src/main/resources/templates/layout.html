@@ -100,6 +100,41 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <div layout:fragment="scripts"></div>
     <script>
+
+            var dataHoje = new Date();
+            const dataMinimaContrato = adicionaDias(dataHoje, 30);
+            const dataMin = dataAnoMesDiaHifens(dataMinimaContrato);
+            const dataMinView = dataDiaMesAnoBarras(dataMinimaContrato);
+            const dataContratoElemento = document.getElementById('datacontrato')
+            if (dataContratoElemento) {
+                dataContratoElemento.setAttribute('placeholder', dataMinView);
+                dataContratoElemento.setAttribute('min', dataMin);
+            }
+            const dataMaximaContrato = adicionaDias(dataHoje, 365);
+            const dataMax = dataAnoMesDiaHifens(dataMaximaContrato);
+            if (dataContratoElemento) {
+                dataContratoElemento.setAttribute('max', dataMax);
+            }
+
+            const dataMinimaItem = adicionaDias(dataHoje, 30);
+            const dataMinI = dataAnoMesDiaHifens(dataMinimaItem);
+            const dataMinViewI = dataDiaMesAnoBarras(dataMinimaItem);
+            const dataItemElemento = document.getElementById('vencimentoDP')
+            if (dataItemElemento) {
+                dataItemElemento.setAttribute('placeholder', dataMinView);
+                dataItemElemento.setAttribute('min', dataMinI);
+            }
+            const vencimentoContratoElemento = document.getElementById('vencimentocontrato');
+            if (vencimentoContratoElemento) {
+                const vencimentoContrato = vencimentoContratoElemento.value;
+                const vencimentoContratoSplit = vencimentoContrato.split("/");
+                const vencimentoContratoTratado = vencimentoContratoSplit[2] + "-" + vencimentoContratoSplit[1] + "-" + vencimentoContratoSplit[0];
+                if (dataItemElemento) {
+                    dataItemElemento.setAttribute('max', vencimentoContratoTratado);
+                }
+            }
+
+
             const divmsgcontratoElemento = document.getElementById('divmsgcontrato')
             if (divmsgcontratoElemento) {
                 divmsgcontratoElemento.style.display="none";
@@ -108,6 +143,21 @@
             const divmsgItemElemento = document.getElementById('divmsgitem');
             if (divmsgItemElemento) {
                 divmsgItemElemento.style.display="none";
+            }
+
+            function dataAnoMesDiaHifens(data) {
+                const dia = data.getDate() > 9 ? data.getDate() : "0" + data.getDate();
+                const mes = (data.getMonth() + 1) > 9 ? (data.getMonth() + 1) : "0" + (data.getMonth() + 1);
+                const dataRetorno = data.getFullYear() + "-" + (mes) + "-" + dia;
+                return dataRetorno;
+            }
+
+
+            function dataDiaMesAnoBarras(data) {
+                const dia = data.getDate() > 9 ? data.getDate() : "0" + data.getDate();
+                const mes = (data.getMonth() + 1) > 9 ? (data.getMonth() + 1) : "0" + (data.getMonth() + 1);
+                const dataRetorno =  dia + "/" +  (mes) + "/" + data.getFullYear();
+                return dataRetorno;
             }
 
             function valida() {
@@ -201,9 +251,7 @@
                 const msgcontratoElemento = document.getElementById('msgcontrato');
                 const divmsgcontratoElemento = document.getElementById('divmsgcontrato');
                 const dataContratoElemento = document.getElementById('datacontrato');
-
                 const dataContratoDigitada = dataContratoElemento.value;
-
                 const dataTratada = dataContratoDigitada.replace('-','/').replace('-','/');
                 const dataContrato = new Date(dataTratada);
                 var dataHoje = new Date();

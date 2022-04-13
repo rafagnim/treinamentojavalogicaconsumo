@@ -31,9 +31,8 @@
 
                 <div class="form-group mb-3">
                     <label th:for="data">Vencimento</label>
-                    <input class="form-control" name="data" th:type="date" th:field="*{dataVencimento}" th:value="*{dataVencimento}" id="datacontrato"  required onfocusout="validaData()">
+                    <input class="form-control" name="data" th:type="text" th:field="*{dataVencimento}" th:value="*{dataVencimento}" placeholder="dd/mm/aaaa" onfocus="(this.type='date')" id="datacontrato" min="" max="" required onfocusout="validaData()">
                 </div>
-
                 <button type="submit" class="btn btn-dark">Cadastrar</button>
             </form>
         </div>

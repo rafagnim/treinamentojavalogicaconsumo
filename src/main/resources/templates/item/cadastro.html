@@ -89,9 +89,10 @@
                 <tfoot>
                 <tr>
                     <td>Total</td>
+                    <td colspan="1"></td>
                     <td th:text="${#numbers.formatCurrency(#aggregates.sum(itens.![vl_duplicata]))}" style="text-align: right;"></td>
                     <input type="hidden" th:value="${#aggregates.sum(itens.![vl_duplicata])}" id="total">
-                    <td colspan="1"></td>
+
                 </tr>
                 </tfoot>
             </table>
@@ -128,15 +129,8 @@
 
                 <div class="form-group mb-1">
                     <label >Vencimento:</label>
-                    <input class="form-control" type="date" th:field="*{dataVencimento}" min="0.01" step="0.01" th:value="*{dataVencimento}" id="vencimentoDP"  name="vencimentoDP" required onfocusout="validaDataItem()">
+                    <input class="form-control" type="text" th:field="*{dataVencimento}" th:value="*{dataVencimento}" placeholder="dd/mm/aaaa" onfocus="(this.type='date')" id="vencimentoDP" min="" max="" name="vencimentoDP" required onfocusout="validaDataItem()">
                 </div>
-
-
-<!--                <div class="form-group mb-3">-->
-<!--                    <label th:for="data">Vencimento</label>-->
-<!--                    <input class="form-control" name="data" th:type="date" th:field="*{dataVencimento}" th:value="*{dataVencimento}" id="datacontrato"  required onfocusout="validaData()">-->
-<!--                </div>-->
-
 
                 <div class="form-group mb-1">
                     <label >Valor da duplicata:</label>
