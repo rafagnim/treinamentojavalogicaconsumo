@@ -101,7 +101,14 @@
 <div layout:fragment="scripts"></div>
     <script>
             const divmsgcontratoElemento = document.getElementById('divmsgcontrato')
-            divmsgcontratoElemento.style.display="none";
+            if (divmsgcontratoElemento) {
+                divmsgcontratoElemento.style.display="none";
+            }
+
+            const divmsgItemElemento = document.getElementById('divmsgitem');
+            if (divmsgItemElemento) {
+                divmsgItemElemento.style.display="none";
+            }
 
             function valida() {
                 const cpfcnpjElement = document.getElementById('cpfcnpj');
@@ -191,40 +198,83 @@
             }
 
             function validaData() {
-                const dataContratoElemento = document.getElementById('datacontrato');
-                const dataContratoDigitada = dataContratoElemento.value;
-                const dataTratada = dataContratoDigitada.replace('-','/').replace('-','/');
-                const dataContrato = new Date(dataTratada);
-                console.log(dataContrato);
-                var dataHoje = new Date();
-                //var dataTimeHoje = new Date();
-                //var dataHoje = new Date(dataTimeHoje.getFullYear().toString(), (dataTimeHoje.getMonth + 1).toString(), dataTimeHoje.getDate().toString());
-                console.log(dataHoje);
-                const dataMinimaContrato = adicionaDias(dataHoje, 30);
-                console.log(dataMinimaContrato);
-
-                if (dataContrato >= dataMinimaContrato) {
-                    console.log("OK");
-                } else {
-                    console.log("NAO OK");
-                }
-
-                const dia = dataMinimaContrato.getDate() > 9 ? dataMinimaContrato.getDate() : "0" + dataMinimaContrato.getDate();
-                const mes = (dataMinimaContrato.getMonth() + 1) > 9 ? (dataMinimaContrato.getMonth() + 1) : "0" + (dataMinimaContrato.getMonth() + 1);
-                const dataMinimaContratoView = dia + "/" + (mes) +  "/" + dataMinimaContrato.getFullYear();
-                console.log(dataMinimaContratoView);
-
                 const msgcontratoElemento = document.getElementById('msgcontrato');
                 const divmsgcontratoElemento = document.getElementById('divmsgcontrato');
+                const dataContratoElemento = document.getElementById('datacontrato');
 
-                if (dataContrato >= dataMinimaContrato) {
+                const dataContratoDigitada = dataContratoElemento.value;
+
+                const dataTratada = dataContratoDigitada.replace('-','/').replace('-','/');
+                const dataContrato = new Date(dataTratada);
+                var dataHoje = new Date();
+                const dataMinimaContrato = adicionaDias(dataHoje, 29);
+                const dataMinimaContratoParaView = adicionaDias(dataHoje, 30);
+                const dia = dataMinimaContratoParaView.getDate() > 9 ? dataMinimaContratoParaView.getDate() : "0" + dataMinimaContratoParaView.getDate();
+                const mes = (dataMinimaContratoParaView.getMonth() + 1) > 9 ? (dataMinimaContratoParaView.getMonth() + 1) : "0" + (dataMinimaContratoParaView.getMonth() + 1);
+                const dataMinimaContratoView = dia + "/" + (mes) +  "/" + dataMinimaContratoParaView.getFullYear();
+                if (dataContrato.getTime() >= dataMinimaContrato.getTime()) {
                     divmsgcontratoElemento.style.display="none";
+
+                    const dataMaximaContrato = adicionaDias(dataHoje, 365);
+                    const dataMaximaContratoParaView = adicionaDias(dataHoje, 365);
+                    const dia1 = dataMaximaContratoParaView.getDate() > 9 ? dataMaximaContratoParaView.getDate() : "0" + dataMaximaContratoParaView.getDate();
+                    const mes1 = (dataMaximaContratoParaView.getMonth() + 1) > 9 ? (dataMaximaContratoParaView.getMonth() + 1) : "0" + (dataMaximaContratoParaView.getMonth() + 1);
+                    const dataMaximaContratoView = dia1 + "/" + (mes1) +  "/" + dataMaximaContratoParaView.getFullYear();
+                    if (dataContrato.getTime() >= dataMaximaContrato.getTime()) {
+                        divmsgcontratoElemento.style.display="block";
+                        msgcontratoElemento.innerHTML = "Prazo máximo de vencimento: 365 dias (" + dataMaximaContratoView + ").";
+                        dataContratoElemento.focus();
+                    } else {
+                        divmsgcontratoElemento.style.display="none";
+                    }
                 } else {
                     divmsgcontratoElemento.style.display="block";
                     msgcontratoElemento.innerHTML = "Prazo mínimo de vencimento: 30 dias (" + dataMinimaContratoView + ").";
                     dataContratoElemento.focus();
                 }
             }
+
+            function validaDataItem() {
+                const msgItemElemento = document.getElementById('msgitem');
+                const divmsgItemElemento = document.getElementById('divmsgitem');
+                const dataItemElemento = document.getElementById('vencimentoDP');
+                divmsgItemElemento.style.display="none";
+                const dataItemDigitada = dataItemElemento.value;
+                const dataItemTratada = dataItemDigitada.replace('-','/').replace('-','/');
+                const dataItem = new Date(dataItemTratada);
+                var dataHoje = new Date();
+                const dataMinimaItem = adicionaDias(dataHoje, 29);
+                const dataMinimaItemParaView = adicionaDias(dataHoje, 30);
+                const dia = dataMinimaItemParaView.getDate() > 9 ? dataMinimaItemParaView.getDate() : "0" + dataMinimaItemParaView.getDate();
+                const mes = (dataMinimaItemParaView.getMonth() + 1) > 9 ? (dataMinimaItemParaView.getMonth() + 1) : "0" + (dataMinimaItemParaView.getMonth() + 1);
+                const dataMinimaItemView = dia + "/" + (mes) +  "/" + dataMinimaItemParaView.getFullYear();
+
+
+                if (dataItem.getTime() >= dataMinimaItem.getTime()) {
+                    divmsgItemElemento.style.display="none";
+                    const vencimentoContratoElemento = document.getElementById('vencimentocontrato');
+                    const vencimentoContrato = vencimentoContratoElemento.value;
+                    const vencimentoContratoSplit = vencimentoContrato.split("/");
+                    const vencimentoContratoTratado = vencimentoContratoSplit[2] + "/" + vencimentoContratoSplit[1] + "/" + vencimentoContratoSplit[0];
+                    var dataMaximaItem = new Date(vencimentoContratoTratado);
+                    const dataMaximaItemParaView = dataMaximaItem;
+                    const dia1 = dataMaximaItemParaView.getDate() > 9 ? dataMaximaItemParaView.getDate() : "0" + dataMaximaItemoParaView.getDate();
+                    const mes1 = (dataMaximaItemParaView.getMonth() + 1) > 9 ? (dataMaximaItemParaView.getMonth() + 1) : "0" + (dataMaximaItemParaView.getMonth() + 1);
+                    const dataMaximaItemView = dia1 + "/" + (mes1) +  "/" + dataMaximaItemParaView.getFullYear();
+                    if (dataItem.getTime() > dataMaximaItem.getTime()) {
+                        divmsgItemElemento.style.display="block";
+                        msgItemElemento.innerHTML = "Prazo máximo de vencimento não pode ultrapassar o vencimento do contrato (" + dataMaximaItemView + ").";
+                        dataItemElemento.focus();
+                    } else {
+                        divmsgItemElemento.style.display="none";
+                    }
+                } else {
+                    divmsgItemElemento.style.display="block";
+                    msgItemElemento.innerHTML = "Prazo mínimo de vencimento: 30 dias (" + dataMinimaItemView + ").";
+                    dataItemElemento.focus();
+                }
+            }
+
 
             function adicionaDias(data, dias) {
                 var dataRetorno = new Date(data);
