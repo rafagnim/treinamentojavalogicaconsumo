@@ -11,49 +11,121 @@
             <p class="text-white">Simular Empréstimo</p>
         </div>
 
-        <div class="card-body mt-3">
+        <div class="alert alert-danger mt-3" id="divmsgemprestimo" >
+            <div>
+                <p id="msgemprestimo" th:text="${msgemprestimo}"></p>
+            </div>
+        </div>
+
+        <div class="card-body mt-3" th:if="${#lists.isEmpty(parcelas)}">
             <form method="POST" th:object="${emprestimo}"
-                  th:action="@{/contrato/emprestimovalidar}" name="emprestimo" onSubmit="return valida()">
+                  th:action="@{/contrato/emprestimovalidar}" name="emprestimo">
                 <div class="form-group mb-3">
                     <label >CPF/CNPJ:</label>
-                    <input class="form-control" type="text" th:field="*{cpf_cnpj}" name="cpf_cnpj" required/>
+                    <input class="form-control" type="text" th:field="*{cpf_cnpj}" th:value="*{cpf_cnpj}" placeholder="000.000.000-00 00.000.000/0000-00" name="cpf_cnpj" id="cpfcnpjemprestimo" autofocus required onfocusout="validaIDEmprestimo()" onkeyup="mascara()">
                 </div>
+
+                <div class="form-group mb-3">
+                    <label >Valor:</label>
+                    <input class="form-control" type="number" th:field="*{valor}" th:value="*{valor}" min="100" max="1000" step="0.01" name="cpf_cnpj" id="valoremprestimo" required>
+                </div>
+
+                <label >Parcelas:</label>
+                <select class="form-select" th:field="*{parcelas}" name="parcelas" required>
+                    <option selected data-default value=""></option>
+                    <option th:each="parcela: ${listaparcelas}" th:value="${parcela}" th:text="${parcela}" th:name="${parcela}"/>
+                </select>
+
                 <button type="submit" class="btn btn-dark">Validar</button>
             </form>
         </div>
     </div>
 
-    <div class="modal" tabindex="-1" id="alerta">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">CPF/CNPJ Inválido</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Verifique e informe um os dados digitados.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>
-                    <!--                        <button type="button" class="btn btn-primary">Save changes</button>-->
-                </div>
-            </div>
+    <div class="form-group mb-3" th:if="${valido}">
+        <div class="card-header">
+            <p class="text-dark">Resultado da Simulação: </p>
         </div>
+
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>CPF/CNPJ</th>
+                <th>Valor</th>
+                <th>Parcelas</th>
+                <th>Taxa Mensal</th>
+                <th>Taxa Anual</th>
+            </tr>
+            </thead>
+
+            <tbody>
+                        <tr >
+                            <td>
+                                <p th:text="${emprestimoretorno.cpf_cnpj}">Olá</p>
+                            </td>
+
+                            <td th:text="${#numbers.formatCurrency(emprestimoretorno.valor)}"></td>
+                            <td th:text="${emprestimoretorno.parcelas}"></td>
+                            <td th:text="${emprestimoretorno.taxaMensal}" style="text-align: right;"></td>
+                            <td th:text="${emprestimoretorno.taxaAnual}" style="text-align: right;"></td>
+                            <td>
+                        </tr>
+            </tbody>
+        </table>
+
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Parcela</th>
+                <th style="text-align: right;">Amortizacao</th>
+                <th style="text-align: right;">Juros</th>
+                <th style="text-align: right;">Total da Parcela</th>
+                <th style="text-align: right;">Saldo Devedor</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="parcela : ${parcelas}">
+                <td th:text="${parcela.parcela}"></td>
+                <td th:text="${#numbers.formatCurrency(parcela.amortizacao)}" style="text-align: right;"></td>
+                <td th:text="${#numbers.formatCurrency(parcela.juros)}" style="text-align: right;"></td>
+                <td th:text="${#numbers.formatCurrency(parcela.totalParcela)}" style="text-align: right;"></td>
+                <td th:text="${#numbers.formatCurrency(parcela.saldoDevedor)}" style="text-align: right;"></td>
+                <td>
+
+            </tr>
+            </tbody>
+        </table>
+
+        <a class="btn btn-dark btn-sm"
+           th:href="@{/contrato/emprestimo}">Nova Simulacao</a>
+
+
+
     </div>
+
+<!--    <div class="modal" tabindex="-1" id="alerta">-->
+<!--        <div class="modal-dialog">-->
+<!--            <div class="modal-content">-->
+<!--                <div class="modal-header">-->
+<!--                    <h5 class="modal-title">CPF/CNPJ Inválido</h5>-->
+<!--                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--                </div>-->
+<!--                <div class="modal-body">-->
+<!--                    <p>Verifique e informe um os dados digitados.</p>-->
+<!--                </div>-->
+<!--                <div class="modal-footer">-->
+<!--                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>-->
+<!--                    &lt;!&ndash;                        <button type="button" class="btn btn-primary">Save changes</button>&ndash;&gt;-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
 
     <div layout:fragment="scripts">
         <script>
-            function valida() {
-                if(document.estacoes.estacaoOrigem.value== "" || document.estacoes.estacaoDestino.value == "") {
-                    var myModal = new bootstrap.Modal(document.getElementById('alerta'), {
-                        keyboard: false
-                    });
-                    myModal.show();
-                    document.emprestimo.cpf_cnpj.focus();
-                    return false;
-                    }
-                return true;
-            }
+
         </script>
 
     </div>

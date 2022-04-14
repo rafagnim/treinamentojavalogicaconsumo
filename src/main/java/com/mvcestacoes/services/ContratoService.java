@@ -1,6 +1,7 @@
 package com.mvcestacoes.services;
 
 import com.mvcestacoes.entities.ContratoAPI;
+import com.mvcestacoes.entities.Emprestimo;
 import com.mvcestacoes.entities.ItemContrato;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -45,21 +46,30 @@ public class ContratoService {
                         .exchangeToFlux(e -> e.bodyToFlux(ContratoAPI.class));
     }
 
-    public Mono<ContratoAPI> atualizaItens(ItemContrato item, Integer contrato_id) {
-        return webClient.put().uri("/atualizaritens/" + contrato_id)
-                .body(Mono.just(item), ItemContrato.class)
+    public Mono<Emprestimo> simulaEmprestimo(Emprestimo emprestimo) {
+        return webClient.post().uri("/emprestimo")
+                .body(Mono.just(emprestimo), Emprestimo.class)
                 .retrieve()
                 .onStatus(HttpStatus::isError, response -> response.bodyToMono(String.class)
                         .flatMap(error -> Mono.error(new RuntimeException(error))))
-                .bodyToMono(ContratoAPI.class);
+                .bodyToMono(Emprestimo.class);
     }
 
-    public Mono<ContratoAPI> excluiItem(Integer item_id) {
-        return webClient.put().uri("/excluiitem/" + item_id)
-                .body(Mono.just(item_id), Integer.class)
-                .retrieve()
-                .onStatus(HttpStatus::isError, response -> response.bodyToMono(String.class)
-                        .flatMap(error -> Mono.error(new RuntimeException(error))))
-                .bodyToMono(ContratoAPI.class);
-    }
+//    public Mono<ContratoAPI> atualizaItens(ItemContrato item, Integer contrato_id) {
+//        return webClient.put().uri("/atualizaritens/" + contrato_id)
+//                .body(Mono.just(item), ItemContrato.class)
+//                .retrieve()
+//                .onStatus(HttpStatus::isError, response -> response.bodyToMono(String.class)
+//                        .flatMap(error -> Mono.error(new RuntimeException(error))))
+//                .bodyToMono(ContratoAPI.class);
+//    }
+
+//    public Mono<ContratoAPI> excluiItem(Integer item_id) {
+//        return webClient.put().uri("/excluiitem/" + item_id)
+//                .body(Mono.just(item_id), Integer.class)
+//                .retrieve()
+//                .onStatus(HttpStatus::isError, response -> response.bodyToMono(String.class)
+//                        .flatMap(error -> Mono.error(new RuntimeException(error))))
+//                .bodyToMono(ContratoAPI.class);
+//    }
 }

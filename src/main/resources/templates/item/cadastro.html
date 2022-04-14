@@ -105,11 +105,11 @@
 <!--        </div>-->
 
 
-<!--        <div class="alert alert-danger mt-3">-->
-<!--            <div>-->
-<!--                <p th:text="${msgcontrato}"></p>-->
-<!--            </div>-->
-<!--        </div>-->
+        <div class="alert alert-danger mt-3" th:if="${msgcontrato != null}">
+            <div>
+                <p th:text="${msgcontrato}"></p>
+            </div>
+        </div>
 
         <div class="alert alert-danger mt-3" id="divmsgitem">
             <div>

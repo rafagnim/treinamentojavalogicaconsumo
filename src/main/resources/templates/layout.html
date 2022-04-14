@@ -140,6 +140,13 @@
                 divmsgcontratoElemento.style.display="none";
             }
 
+<!--           ============================================================ -->
+            const divmsgemprestimoElemento = document.getElementById('divmsgemprestimo')
+            if (divmsgemprestimoElemento) {
+                divmsgemprestimoElemento.style.display="none";
+            }
+<!--           ============================================================ -->
+
             const divmsgItemElemento = document.getElementById('divmsgitem');
             if (divmsgItemElemento) {
                 divmsgItemElemento.style.display="none";
@@ -159,6 +166,32 @@
                 const dataRetorno =  dia + "/" +  (mes) + "/" + data.getFullYear();
                 return dataRetorno;
             }
+
+<!--            ========================================================================================-->
+
+            function validaIDEmprestimo() {
+                const cpfcnpjElement = document.getElementById('cpfcnpjemprestimo');
+                var cpfcnpj = cpfcnpjElement.value;
+                cpfcnpj = cpfcnpj.replaceAll('.','').replaceAll('-','').replaceAll('/','');
+                console.log(cpfcnpj);
+
+<!--                const cpfcnpjElement = document.getElementById('cpfcnpj');-->
+<!--                const cpfcnpj = cpfcnpjElement.value;-->
+
+
+                const msgemprestimoElemento = document.getElementById('msgemprestimo');
+                const divmsgemprestimoElemento = document.getElementById('divmsgemprestimo');
+
+                if (validaCPF(cpfcnpj) || validaCNPJ(cpfcnpj)) {
+                    divmsgemprestimoElemento.style.display="none";
+                } else {
+                    divmsgemprestimoElemento.style.display="block";
+                    msgemprestimoElemento.innerHTML = "CPF/CNPJ inválido!";
+                    cpfcnpjElement.focus();
+                }
+            }
+
+<!--            ========================================================================================-->
 
             function valida() {
                 const cpfcnpjElement = document.getElementById('cpfcnpj');
@@ -329,6 +362,50 @@
                 dataRetorno.setDate(data.getDate() + dias);
                 return dataRetorno;
             }
+
+            function valida() {
+                if(document.estacoes.estacaoOrigem.value== "" || document.estacoes.estacaoDestino.value == "") {
+                    var myModal = new bootstrap.Modal(document.getElementById('alerta'), {
+                        keyboard: false
+                    });
+                    myModal.show();
+                    document.emprestimo.cpf_cnpj.focus();
+                    return false;
+                    }
+                return true;
+            }
+
+            function mascara() {
+                const cpfcnpjElemento = document.getElementById('cpfcnpjemprestimo');
+                if (cpfcnpjElemento) {
+                    var cpfcnpj = cpfcnpjElemento.value;
+                    if (cpfcnpj.length < 14) {
+                        cpfcnpjElemento.value = cpfcnpjTratado = mCPF(cpfcnpj);
+                    }
+                    if (cpfcnpj.length > 14) {
+                        cpfcnpjElemento.value = cpfcnpjTratado = mCNPJ(cpfcnpj);
+                    }
+                }
+            }
+
+<!--            Créditos pelas funções abaixo:-->
+<!--            https://pt.stackoverflow.com/questions/199264/como-faco-uma-mascara-para-um-input-->
+           function mCNPJ(cnpj){
+				cnpj=cnpj.replace(/\D/g,"")
+				cnpj=cnpj.replace(/^(\d{2})(\d)/,"$1.$2")
+				cnpj=cnpj.replace(/^(\d{2})\.(\d{3})(\d)/,"$1.$2.$3")
+				cnpj=cnpj.replace(/\.(\d{3})(\d)/,".$1/$2")
+				cnpj=cnpj.replace(/(\d{4})(\d)/,"$1-$2")
+				return cnpj
+			}
+			function mCPF(cpf){
+				cpf=cpf.replace(/\D/g,"")
+				cpf=cpf.replace(/(\d{3})(\d)/,"$1.$2")
+				cpf=cpf.replace(/(\d{3})(\d)/,"$1.$2")
+				cpf=cpf.replace(/(\d{3})(\d{1,2})$/,"$1-$2")
+				return cpf
+			}
+
     </script>
 
 </body>

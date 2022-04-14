@@ -3,6 +3,7 @@ package com.mvcestacoes.controllers;
 import com.mvcestacoes.entities.*;
 import com.mvcestacoes.services.ContratoService;
 import com.mvcestacoes.services.ItemService;
+import org.apache.groovy.util.Arrays;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -155,19 +158,24 @@ public class ContratoController {
         ModelAndView mv = new ModelAndView("contratos/emprestimo.html");
         if (emprestimo == null) {
             mv.addObject("emprestimo", new Emprestimo());
+
+            // provisório, pegar no back
+            Integer parcelas[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+            mv.addObject("listaparcelas",parcelas);
         }
         return mv;
     }
 
     @RequestMapping(path = "emprestimovalidar", method = RequestMethod.POST)
     public ModelAndView validarIDEmprestimo(Emprestimo emprestimo, RedirectAttributes redirectAttributes) {
-        System.out.println(emprestimo.getCpf_cnpj());
-        var isValid = contratoService.validaCpfCnpj(emprestimo.getCpf_cnpj()).block();
+        var isValid = contratoService.validaCpfCnpj(emprestimo.getCpf_cnpj().replace(".", "").replace("-", "").replace("/", "")).block();
         ModelAndView mv = new ModelAndView("redirect:/contrato/emprestimo");
+
+        var emprestimoRetorno = contratoService.simulaEmprestimo(emprestimo).block();
         redirectAttributes.addFlashAttribute("valido", isValid);
-        redirectAttributes.addFlashAttribute("emprestimo", emprestimo);
-        //"redirect:/item/adicionar")
-        //mv.addObject("emprestimo", emprestimo);
+        redirectAttributes.addFlashAttribute("emprestimoretorno", emprestimoRetorno);
+        emprestimoRetorno.setTaxaMensal(emprestimoRetorno.getTaxaMensal().multiply(BigDecimal.valueOf(100)).setScale(3, RoundingMode.HALF_EVEN));
+        redirectAttributes.addFlashAttribute("parcelas", emprestimoRetorno.getParcelasResultado());
         return mv;
     }
 }
