@@ -22,7 +22,7 @@
                   th:action="@{/contrato/emprestimovalidar}" name="emprestimo">
                 <div class="form-group mb-3">
                     <label >CPF/CNPJ:</label>
-                    <input class="form-control" type="text" th:field="*{cpf_cnpj}" th:value="*{cpf_cnpj}" placeholder="000.000.000-00 00.000.000/0000-00" name="cpf_cnpj" id="cpfcnpjemprestimo" autofocus required onfocusout="validaIDEmprestimo()" onkeyup="mascara()">
+                    <input class="form-control" type="text" th:field="*{cpf_cnpj}" th:value="*{cpf_cnpj}" placeholder="000.000.000-00 00.000.000/0000-00" min="100" name="cpf_cnpj" id="cpfcnpj" autofocus required onfocusout="validaID()" onkeyup="mascara()">
                 </div>
 
                 <div class="form-group mb-3">
@@ -36,7 +36,7 @@
                     <option th:each="parcela: ${listaparcelas}" th:value="${parcela}" th:text="${parcela}" th:name="${parcela}"/>
                 </select>
 
-                <button type="submit" class="btn btn-dark">Validar</button>
+                <button type="submit" class="btn btn-dark">Simular</button>
             </form>
         </div>
     </div>
@@ -53,8 +53,8 @@
                 <th>CPF/CNPJ</th>
                 <th>Valor</th>
                 <th>Parcelas</th>
-                <th>Taxa Mensal</th>
-                <th>Taxa Anual</th>
+                <th style="text-align: right;">Taxa Mensal</th>
+                <th style="text-align: right;">Taxa Anual</th>
             </tr>
             </thead>
 
@@ -66,8 +66,8 @@
 
                             <td th:text="${#numbers.formatCurrency(emprestimoretorno.valor)}"></td>
                             <td th:text="${emprestimoretorno.parcelas}"></td>
-                            <td th:text="${emprestimoretorno.taxaMensal}" style="text-align: right;"></td>
-                            <td th:text="${emprestimoretorno.taxaAnual}" style="text-align: right;"></td>
+                            <td th:text="${emprestimoretorno.taxaMensal + ' % a.m.'}" style="text-align: right;"></td>
+                            <td th:text="${emprestimoretorno.taxaAnual + ' % a.a.'}" style="text-align: right;"></td>
                             <td>
                         </tr>
             </tbody>
@@ -99,29 +99,11 @@
         </table>
 
         <a class="btn btn-dark btn-sm"
-           th:href="@{/contrato/emprestimo}">Nova Simulacao</a>
+           th:href="@{/contrato/emprestimo}">Nova Simulação</a>
 
 
 
     </div>
-
-<!--    <div class="modal" tabindex="-1" id="alerta">-->
-<!--        <div class="modal-dialog">-->
-<!--            <div class="modal-content">-->
-<!--                <div class="modal-header">-->
-<!--                    <h5 class="modal-title">CPF/CNPJ Inválido</h5>-->
-<!--                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--                </div>-->
-<!--                <div class="modal-body">-->
-<!--                    <p>Verifique e informe um os dados digitados.</p>-->
-<!--                </div>-->
-<!--                <div class="modal-footer">-->
-<!--                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">OK</button>-->
-<!--                    &lt;!&ndash;                        <button type="button" class="btn btn-primary">Save changes</button>&ndash;&gt;-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
 
     <div layout:fragment="scripts">
         <script>

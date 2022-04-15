@@ -88,4 +88,8 @@ public class Contrato {
         retorno[2] = Integer.parseInt(data[0]);
         return retorno;
     }
+
+    public static String formataID(String cpfCnpj) {
+        return cpfCnpj.replace(".", "").replace("-", "").replace("/", "");
+    }
 }

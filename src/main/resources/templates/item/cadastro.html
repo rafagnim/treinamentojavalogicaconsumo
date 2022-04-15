@@ -98,13 +98,6 @@
             </table>
         </div>
 
-<!--        <div class="alert alert-danger mt-3" th:if="${msgcontrato != null}" id="divmsgcontratoitem">-->
-<!--            <div>-->
-<!--                <p id="msgcontratoitem" th:text="${msgcontrato}"></p>-->
-<!--            </div>-->
-<!--        </div>-->
-
-
         <div class="alert alert-danger mt-3" th:if="${msgcontrato != null}">
             <div>
                 <p th:text="${msgcontrato}"></p>
@@ -178,10 +171,6 @@
 
                 const valorcontrato = parseFloat(document.getElementById('valorcontrato').value);
                 const total = parseFloat(document.getElementById('total').value);
-<!--                var msg = "";-->
-<!--                if (total > valorcontrato) {-->
-<!--                    var msg = "VLR ULTRAPASSADO";-->
-<!--                }-->
                 document.getElementById('faltacadastrar').innerHTML = (valorcontrato - total).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'});
 
                 if (total == valorcontrato) {

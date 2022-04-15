@@ -45,7 +45,7 @@ public class ContratoController {
         ModelAndView mv = new ModelAndView("redirect:/item/adicionar");
         Contrato.itens = new ArrayList<>();
         try {
-            var ehValido = contratoService.validaCpfCnpj(contrato.getCpf_cnpj()).block();
+            var ehValido = contratoService.validaCpfCnpj(Contrato.formataID(contrato.getCpf_cnpj())).block();
             if (ehValido) {
                 redirectAttributes.addFlashAttribute("contrato_cpf_cnpj", contrato.getCpf_cnpj());
                 redirectAttributes.addFlashAttribute("contrato_valor", contrato.getVl_contrato());
@@ -66,7 +66,7 @@ public class ContratoController {
         try {
             Integer[] dataSplit = Contrato.desformataData(dataVencimento);
             LocalDate data = LocalDate.of(dataSplit[0], dataSplit[1], dataSplit[2]);
-            ContratoAPI c = new ContratoAPI(null, contrato_cpf_cnpj, data, Double.parseDouble(contrato_valor));
+            ContratoAPI c = new ContratoAPI(null, Contrato.formataID(contrato_cpf_cnpj), data, Double.parseDouble(contrato_valor));
             var it = Contrato.itens.stream().map(i-> {
                 Integer[] dataItemSplit = ItemContrato.desformataData(i.getDataVencimento());
                 LocalDate dataItem = LocalDate.of(dataItemSplit[0], dataItemSplit[1], dataItemSplit[2]);
@@ -115,6 +115,8 @@ public class ContratoController {
 
                 mv.addObject("itens", itensRetorno);
                 mv.addObject("contrato", contratoRetorno);
+            } else {
+                //mv.addObject("contrato_cpf_cnpj", contrato_cpf_cnpj);
             }
         } catch (RuntimeException r) {
             mv.addObject("msg", (r.getMessage().split("\\[")[1]).split("\\]")[0]);
@@ -131,18 +133,20 @@ public class ContratoController {
             return mv;
         }
 
-        var idValido = contratoService.validaCpfCnpj(cpf_cnpj).block();
+        var idValido = contratoService.validaCpfCnpj(Contrato.formataID(cpf_cnpj)).block();
 
         if (idValido) {
             try {
-                var contratos = contratoService.listarContratos(cpf_cnpj)
-                        .toStream().collect(Collectors.toList());
+                var contratos = contratoService.listarContratos(Contrato.formataID(cpf_cnpj))
+                        .toStream().map(c -> {
+                            return new Contrato(c.getId(), c.getCpf_cnpj(), c.getVl_contrato(), Contrato.formataData(c.getDataVencimento()));
+                        })                    .collect(Collectors.toList());
 
                 if (contratos.isEmpty()) {
                     redirectAttributes.addFlashAttribute("msg", "Nenhum contrato localizado.");
                 } else {
                     redirectAttributes.addFlashAttribute("contratos", contratos);
-                    redirectAttributes.addFlashAttribute("contrato_cpf_cnpj", cpf_cnpj);
+                    //redirectAttributes.addFlashAttribute("contrato_cpf_cnpj", cpf_cnpj);
                 }
             } catch (RuntimeException r) {
                 redirectAttributes.addFlashAttribute("msg", (r.getMessage().split("\\[")[1]).split("\\]")[0]);
@@ -159,7 +163,7 @@ public class ContratoController {
         if (emprestimo == null) {
             mv.addObject("emprestimo", new Emprestimo());
 
-            // provisório, pegar no back
+            // provisório, pegar no back ?
             Integer parcelas[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
             mv.addObject("listaparcelas",parcelas);
         }
@@ -168,7 +172,7 @@ public class ContratoController {
 
     @RequestMapping(path = "emprestimovalidar", method = RequestMethod.POST)
     public ModelAndView validarIDEmprestimo(Emprestimo emprestimo, RedirectAttributes redirectAttributes) {
-        var isValid = contratoService.validaCpfCnpj(emprestimo.getCpf_cnpj().replace(".", "").replace("-", "").replace("/", "")).block();
+        var isValid = contratoService.validaCpfCnpj(Contrato.formataID(emprestimo.getCpf_cnpj())).block();
         ModelAndView mv = new ModelAndView("redirect:/contrato/emprestimo");
 
         var emprestimoRetorno = contratoService.simulaEmprestimo(emprestimo).block();

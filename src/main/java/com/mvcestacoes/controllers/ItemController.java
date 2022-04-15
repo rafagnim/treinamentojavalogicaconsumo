@@ -47,16 +47,16 @@ public class ItemController {
         return mv;
     }
 
-    @RequestMapping(path = "excluir", method = RequestMethod.GET)
-    public ModelAndView excluir(String item_id, String vl_id, String contrato_cpf_cnpj, String contrato_valor, String dataVencimento, RedirectAttributes redirectAttributes) {
-        ModelAndView mv = new ModelAndView("redirect:/item/adicionar");
-        Contrato.itens = Contrato.itens.stream()
-                .filter(i -> !(i.getId_duplicata().equals(item_id) && i.getVl_duplicata() == Double.parseDouble(vl_id)))
-                .collect(Collectors.toList());
-        redirectAttributes.addFlashAttribute("itens", Contrato.itens);
-        redirectAttributes.addFlashAttribute("contrato_cpf_cnpj", contrato_cpf_cnpj);
-        redirectAttributes.addFlashAttribute("contrato_valor", contrato_valor);
-        redirectAttributes.addFlashAttribute("contrato_dataVencimento", dataVencimento);
-        return mv;
-    }
+//    @RequestMapping(path = "excluir", method = RequestMethod.GET)
+//    public ModelAndView excluir(String item_id, String vl_id, String contrato_cpf_cnpj, String contrato_valor, String dataVencimento, RedirectAttributes redirectAttributes) {
+//        ModelAndView mv = new ModelAndView("redirect:/item/adicionar");
+//        Contrato.itens = Contrato.itens.stream()
+//                .filter(i -> !(i.getId_duplicata().equals(item_id) && i.getVl_duplicata() == Double.parseDouble(vl_id)))
+//                .collect(Collectors.toList());
+//        redirectAttributes.addFlashAttribute("itens", Contrato.itens);
+//        redirectAttributes.addFlashAttribute("contrato_cpf_cnpj", contrato_cpf_cnpj);
+//        redirectAttributes.addFlashAttribute("contrato_valor", contrato_valor);
+//        redirectAttributes.addFlashAttribute("contrato_dataVencimento", dataVencimento);
+//        return mv;
+//    }
 }

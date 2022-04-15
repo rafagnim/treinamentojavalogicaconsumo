@@ -32,8 +32,7 @@
                     <form method="GET" th:action="@{/contrato/buscarcontratos}">
                         <div class="form-group mb-3">
                             <label>CPF ou CNPJ</label>
-                            <input class="form-control" type="number" name="cpf_cnpj" th:value="${cpf_cnpj}" min="100" step="1" id="cpfcnpj" autofocus required onfocusout="valida()">
-
+                            <input class="form-control" type="text" name="cpf_cnpj" th:value="${cpf_cnpj}" placeholder="000.000.000-00 00.000.000/0000-00" min="100" step="1" id="cpfcnpj" autofocus required onfocusout="validaID()" onkeyup="mascara()">
                         </div>
                         <button type="submit" class="btn btn-dark">Pesquisar
                         </button>
@@ -51,7 +50,6 @@
                         <thead>
                         <tr>
                             <th>Id</th>
-                            <th>CPF/CNPJ</th>
                             <th>Vencimento</th>
                             <th style="text-align: right;">Valor Total</th>
                         </tr>
@@ -60,13 +58,14 @@
                         <tbody>
                         <tr th:each="contrato : ${contratos}">
                             <td th:text="${contrato.id}"></td>
-                            <td th:text="${contrato.cpf_cnpj}"></td>
                             <td th:text="${contrato.dataVencimento}"></td>
-                            <td th:text="${contrato.vl_contrato}" style="text-align: right;"></td>
+                            <td th:text="${#numbers.formatCurrency(contrato.vl_contrato)}" style="text-align: right;"></td>
+
                             <td>
 
                                 <a class="btn btn-dark btn-sm"
                                    th:href="@{/contrato/consultar(id=${contrato.id})}">Consultar Itens</a>
+                            </td>
 
                         </tr>
                         </tbody>
@@ -95,7 +94,7 @@
                 <tbody>
                 <tr>
                     <th>
-                        <p class="text-dark" th:text="${contrato.cpf_cnpj}"></p>
+                        <p class="text-dark" th:text="${contrato.cpf_cnpj}" id="cpfcnpj1"></p>
                     </th>
                     <th>
                         <p class="text-dark" th:text="${contrato.dataVencimento}"></p>
@@ -123,7 +122,6 @@
 
                 <tbody>
                 <tr th:each="itemcontrato : ${itens}" id="itens">
-                    <!--                    <td th:text="${itemcontrato.id}"></td>-->
                     <td th:text="${itemcontrato.id_duplicata}"></td>
                     <td th:text="${itemcontrato.dataVencimento}"></td>
                     <td th:text="${#numbers.formatCurrency(itemcontrato.vl_duplicata)}" style="text-align: right;"></td>

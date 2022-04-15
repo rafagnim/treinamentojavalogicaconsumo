@@ -100,7 +100,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <div layout:fragment="scripts"></div>
     <script>
-
+            mascara();
             var dataHoje = new Date();
             const dataMinimaContrato = adicionaDias(dataHoje, 30);
             const dataMin = dataAnoMesDiaHifens(dataMinimaContrato);
@@ -169,8 +169,8 @@
 
 <!--            ========================================================================================-->
 
-            function validaIDEmprestimo() {
-                const cpfcnpjElement = document.getElementById('cpfcnpjemprestimo');
+            function validaID() {
+                const cpfcnpjElement = document.getElementById('cpfcnpj');
                 var cpfcnpj = cpfcnpjElement.value;
                 cpfcnpj = cpfcnpj.replaceAll('.','').replaceAll('-','').replaceAll('/','');
                 console.log(cpfcnpj);
@@ -182,30 +182,48 @@
                 const msgemprestimoElemento = document.getElementById('msgemprestimo');
                 const divmsgemprestimoElemento = document.getElementById('divmsgemprestimo');
 
-                if (validaCPF(cpfcnpj) || validaCNPJ(cpfcnpj)) {
-                    divmsgemprestimoElemento.style.display="none";
-                } else {
-                    divmsgemprestimoElemento.style.display="block";
-                    msgemprestimoElemento.innerHTML = "CPF/CNPJ inválido!";
-                    cpfcnpjElement.focus();
+                const msgcontratoElemento = document.getElementById('msgcontrato');
+                const divmsgcontratoElemento = document.getElementById('divmsgcontrato');
+
+                if (msgemprestimoElemento) {
+                    if (validaCPF(cpfcnpj) || validaCNPJ(cpfcnpj)) {
+                        divmsgemprestimoElemento.style.display="none";
+                    } else {
+                        divmsgemprestimoElemento.style.display="block";
+                        msgemprestimoElemento.innerHTML = "CPF/CNPJ inválido!";
+                        cpfcnpjElement.focus();
+                    }
                 }
+
+                if (msgcontratoElemento) {
+                    if (validaCPF(cpfcnpj) || validaCNPJ(cpfcnpj)) {
+                        divmsgcontratoElemento.style.display="none";
+                    } else {
+                        divmsgcontratoElemento.style.display="block";
+                        msgcontratoElemento.innerHTML = "CPF/CNPJ inválido!";
+                        cpfcnpjElement.focus();
+                    }
+                }
+
+
+
             }
 
 <!--            ========================================================================================-->
 
-            function valida() {
-                const cpfcnpjElement = document.getElementById('cpfcnpj');
-                const cpfcnpj = cpfcnpjElement.value;
-                const msgcontratoElemento = document.getElementById('msgcontrato');
-                const divmsgcontratoElemento = document.getElementById('divmsgcontrato');
-                if (validaCPF(cpfcnpj) || validaCNPJ(cpfcnpj)) {
-                    divmsgcontratoElemento.style.display="none";
-                } else {
-                    divmsgcontratoElemento.style.display="block";
-                    msgcontratoElemento.innerHTML = "CPF/CNPJ inválido!";
-                    cpfcnpjElement.focus();
-                }
-            }
+<!--            function valida() {-->
+<!--                const cpfcnpjElement = document.getElementById('cpfcnpj');-->
+<!--                const cpfcnpj = cpfcnpjElement.value;-->
+<!--                const msgcontratoElemento = document.getElementById('msgcontrato');-->
+<!--                const divmsgcontratoElemento = document.getElementById('divmsgcontrato');-->
+<!--                if (validaCPF(cpfcnpj) || validaCNPJ(cpfcnpj)) {-->
+<!--                    divmsgcontratoElemento.style.display="none";-->
+<!--                } else {-->
+<!--                    divmsgcontratoElemento.style.display="block";-->
+<!--                    msgcontratoElemento.innerHTML = "CPF/CNPJ inválido!";-->
+<!--                    cpfcnpjElement.focus();-->
+<!--                }-->
+<!--            }-->
 
             function validaCPF(cpf) {
                 if (cpf.length < 11) {
@@ -376,7 +394,7 @@
             }
 
             function mascara() {
-                const cpfcnpjElemento = document.getElementById('cpfcnpjemprestimo');
+                const cpfcnpjElemento = document.getElementById('cpfcnpj');
                 if (cpfcnpjElemento) {
                     var cpfcnpj = cpfcnpjElemento.value;
                     if (cpfcnpj.length < 14) {
@@ -384,6 +402,17 @@
                     }
                     if (cpfcnpj.length > 14) {
                         cpfcnpjElemento.value = cpfcnpjTratado = mCNPJ(cpfcnpj);
+                    }
+                }
+
+                const cpfcnpjElemento1 = document.getElementById('cpfcnpj1');
+                if (cpfcnpjElemento1) {
+                    var cpfcnpj = cpfcnpjElemento1.innerHTML;
+                    if (cpfcnpj.length < 14) {
+                        cpfcnpjElemento1.innerHTML = cpfcnpjTratado = mCPF(cpfcnpj);
+                    }
+                    if (cpfcnpj.length > 14) {
+                        cpfcnpjElemento1.innerHTML = cpfcnpjTratado = mCNPJ(cpfcnpj);
                     }
                 }
             }

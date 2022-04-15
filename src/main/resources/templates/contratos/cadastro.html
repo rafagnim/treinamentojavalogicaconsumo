@@ -22,7 +22,8 @@
                   th:action="@{/contrato/cadastrar}">
                 <div class="form-group mb-3">
                     <label >CPF/CNPJ:</label>
-                    <input class="form-control" type="number" th:field="*{cpf_cnpj}" th:value="*{cpf_cnpj}" min="100" step="1" id="cpfcnpj" autofocus required onfocusout="valida()">
+                    <input class="form-control" type="text" th:field="*{cpf_cnpj}" th:value="*{cpf_cnpj}" placeholder="000.000.000-00 00.000.000/0000-00" name="cpf_cnpj" min="100" step="1" id="cpfcnpj" autofocus required onfocusout="validaID()" onkeyup="mascara()">
+
                 </div>
                 <div class="form-group mb-3">
                     <label >Valor do contrato:</label>
