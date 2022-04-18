@@ -1,14 +1,15 @@
 package com.mvcestacoes.entities;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 
 public class Contrato {
 
-    private Integer id;
+    private Long id;
     private String cpf_cnpj;
-    private Double vl_contrato;
+    private BigDecimal vl_contrato;
     private String dataVencimento;
     public List<ItemContrato> itensContrato;
     public static List<ItemContrato> itens;
@@ -16,7 +17,7 @@ public class Contrato {
     public Contrato() {
     }
 
-    public Contrato(Integer id, String cpf_cnpj, Double vl_contrato, String dataVencimento) {
+    public Contrato(Long id, String cpf_cnpj, BigDecimal vl_contrato, String dataVencimento) {
         this.id = id;
         this.cpf_cnpj = cpf_cnpj;
         this.vl_contrato = vl_contrato;
@@ -27,11 +28,11 @@ public class Contrato {
         this.itens.add(i);
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -43,11 +44,11 @@ public class Contrato {
         this.cpf_cnpj = cpf_cnpj;
     }
 
-    public Double getVl_contrato() {
+    public BigDecimal getVl_contrato() {
         return vl_contrato;
     }
 
-    public void setVl_contrato(Double vl_contrato) {
+    public void setVl_contrato(BigDecimal vl_contrato) {
         this.vl_contrato = vl_contrato;
     }
 

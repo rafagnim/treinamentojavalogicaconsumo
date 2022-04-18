@@ -1,32 +1,33 @@
 package com.mvcestacoes.entities;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 public class ContratoAPI {
 
-    private Integer id;
+    private Long id;
     private String cpf_cnpj;
     private LocalDate dataVencimento;
-    private Double vl_contrato;
+    private BigDecimal vl_contrato;
 
     public List<ItemContratoAPI> itensContrato;
 
     public ContratoAPI() {
     }
 
-    public ContratoAPI(Integer id, String cpf_cnpj, LocalDate dataVencimento, Double vl_contrato) {
+    public ContratoAPI(Long id, String cpf_cnpj, LocalDate dataVencimento, BigDecimal vl_contrato) {
         this.id = id;
         this.cpf_cnpj = cpf_cnpj;
         this.vl_contrato = vl_contrato;
         this.dataVencimento = dataVencimento;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -38,11 +39,11 @@ public class ContratoAPI {
         this.cpf_cnpj = cpf_cnpj;
     }
 
-    public Double getVl_contrato() {
+    public BigDecimal getVl_contrato() {
         return vl_contrato;
     }
 
-    public void setVl_contrato(Double vl_contrato) {
+    public void setVl_contrato(BigDecimal vl_contrato) {
         this.vl_contrato = vl_contrato;
     }
 

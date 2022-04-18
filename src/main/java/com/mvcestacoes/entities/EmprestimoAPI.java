@@ -4,21 +4,22 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-public class Emprestimo {
+public class EmprestimoAPI {
+
 
     private String cpf_cnpj;
     private BigDecimal valor;
     private Integer parcelas;
-    private String dataNascimento;
+    private LocalDate dataNascimento;
 
     private BigDecimal taxaMensal;
     private String taxaAnual;
     private List<Parcela> parcelasResultado;
 
-    public Emprestimo() {
+    public EmprestimoAPI() {
     }
 
-    public Emprestimo(String cpf_cnpj, BigDecimal valor, Integer parcelas, String dataNascimento, List<Parcela> parcelasResultado) {
+    public EmprestimoAPI(String cpf_cnpj, BigDecimal valor, Integer parcelas, LocalDate dataNascimento, List<Parcela> parcelasResultado) {
         this.cpf_cnpj = cpf_cnpj;
         this.valor = valor;
         this.parcelas = parcelas;
@@ -74,16 +75,16 @@ public class Emprestimo {
         this.taxaAnual = taxaAnual;
     }
 
-    public String getDataNascimento() {
+    public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(String dataNascimento) {
+    public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 
     public LocalDate formataData(String dataJS) {
         String[] data = dataJS.split("-");
-        return LocalDate.of(Integer.parseInt(data[0]), Integer.parseInt(data[1]), Integer.parseInt(data[2]));
+        return LocalDate.of(Integer.parseInt(data[2]), Integer.parseInt(data[1]), Integer.parseInt(data[0]));
     }
 }
