@@ -158,7 +158,9 @@ public class ContratoController {
         if (emprestimo == null) {
             mv.addObject("emprestimo", new Emprestimo());
             Integer parcelas[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+            String carencia[] = {"0", "30 dias", "60 dias", "90 dias"};
             mv.addObject("listaparcelas",parcelas);
+            mv.addObject("carencia",carencia);
             mv.addObject("taxa", contratoService.obterTaxaPadrao().block());
         }
         return mv;
@@ -169,21 +171,18 @@ public class ContratoController {
         var isValid = contratoService.validaCpfCnpj(Contrato.formataID(emprestimo.getCpf_cnpj())).block();
         ModelAndView mv = new ModelAndView("redirect:/contrato/emprestimo");
 
-        //emprestimo.setDataNascimento(emprestimo.formataData(emprestimo.getDataNascimento()));
-
-        //String cpf_cnpj, BigDecimal valor, Integer parcelas, LocalDate dataNascimento, List<Parcela> parcelasResultado
-
-        var emprestimoRetorno = contratoService.simulaEmprestimo(new EmprestimoAPI(emprestimo.getCpf_cnpj(), emprestimo.getValor(), emprestimo.getParcelas(), emprestimo.formataData(emprestimo.getDataNascimento()), null)).block();
+        var emprestimoRetorno = contratoService.simulaEmprestimo(new EmprestimoAPI(emprestimo.getCpf_cnpj(), emprestimo.getValor(), emprestimo.getParcelas(), emprestimo.formataData(emprestimo.getDataNascimento()), emprestimo.getCarencia(),null)).block();
         redirectAttributes.addFlashAttribute("valido", isValid);
         redirectAttributes.addFlashAttribute("emprestimoretorno", emprestimoRetorno);
-        emprestimoRetorno.setTaxaMensal(emprestimoRetorno.getTaxaMensal().multiply(BigDecimal.valueOf(100)).setScale(3, RoundingMode.HALF_EVEN));
-        redirectAttributes.addFlashAttribute("parcelas", emprestimoRetorno.getParcelasResultado());
+        emprestimoRetorno.setTaxaMensal(emprestimoRetorno.getTaxaMensal().multiply(BigDecimal.valueOf(100)).setScale(4, RoundingMode.HALF_EVEN));
+
+        //public Parcela(int parcela, String data, BigDecimal amortizacao, BigDecimal juros, BigDecimal totalParcela, BigDecimal saldoDevedor) {
+
+        var parcelas = emprestimoRetorno.getParcelasResultado().stream().map(p -> {
+            return new ParcelaDTO(p.getParcela(), ParcelaDTO.formataData(p.getData()), p.getAmortizacao(), p.getJuros(), p.getTotalParcela(), p.getSaldoDevedor());
+        }).collect(Collectors.toList());
+
+        redirectAttributes.addFlashAttribute("parcelas", parcelas);
         return mv;
     }
-
-//    @GetMapping("taxas")
-//    public Integer obterTaxa(@PathVariable Integer idade) {
-//        System.out.println("Veio");
-//        return idade;
-//    }
 }

@@ -10,19 +10,21 @@ public class Emprestimo {
     private BigDecimal valor;
     private Integer parcelas;
     private String dataNascimento;
+    private String carencia;
 
     private BigDecimal taxaMensal;
     private String taxaAnual;
-    private List<Parcela> parcelasResultado;
+    private List<ParcelaDTO> parcelasResultado;
 
     public Emprestimo() {
     }
 
-    public Emprestimo(String cpf_cnpj, BigDecimal valor, Integer parcelas, String dataNascimento, List<Parcela> parcelasResultado) {
+    public Emprestimo(String cpf_cnpj, BigDecimal valor, Integer parcelas, String dataNascimento, String carencia, List<ParcelaDTO> parcelasResultado) {
         this.cpf_cnpj = cpf_cnpj;
         this.valor = valor;
         this.parcelas = parcelas;
         this.dataNascimento = dataNascimento;
+        this.carencia = carencia;
         this.parcelasResultado = parcelasResultado;
     }
 
@@ -50,11 +52,11 @@ public class Emprestimo {
         this.parcelas = parcelas;
     }
 
-    public List<Parcela> getParcelasResultado() {
+    public List<ParcelaDTO> getParcelasResultado() {
         return parcelasResultado;
     }
 
-    public void setParcelasResultado(List<Parcela> parcelasResultado) {
+    public void setParcelasResultado(List<ParcelaDTO> parcelasResultado) {
         this.parcelasResultado = parcelasResultado;
     }
 
@@ -80,6 +82,14 @@ public class Emprestimo {
 
     public void setDataNascimento(String dataNascimento) {
         this.dataNascimento = dataNascimento;
+    }
+
+    public String getCarencia() {
+        return carencia;
+    }
+
+    public void setCarencia(String carencia) {
+        this.carencia = carencia;
     }
 
     public LocalDate formataData(String dataJS) {

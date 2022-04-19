@@ -393,20 +393,50 @@
             }
 
             function trataDataNascimento() {
-
-                const idade = 20;
-                console.log("Tratando data de nascimento");
-
                 const taxaInputElemento = document.getElementById('taxainput');
+
+                var taxa = taxaInputElemento.value;
+
+                var dataNascimento = document.getElementById('datanascimento').value;
+                const dataNascimentoTratada = dataNascimento.replace('-','/').replace('-','/');
+                var dataNascimento = new Date(dataNascimentoTratada);
+                var dataHoje = new Date();
+                var idade = dataHoje.getFullYear() - dataNascimento.getFullYear();
+                if (dataHoje.getMonth() <  dataNascimento.getMonth()) {
+                    idade -= 1;
+                }
+                if ((dataHoje.getMonth() == dataNascimento.getMonth()) && (dataHoje.getDate() < dataNascimento.getDate())) {
+                    idade -= 1;
+                }
+
+                var taxa = taxaRisco(taxa, idade);
+                var taxa = (((Math.pow (((taxa / 100) + 1), (1/12))) - 1) * 100).toFixed(4) + "% a.m.";
+
                 const taxaOutputElemento = document.getElementById('taxaoutput');
 
-                console.log(taxaInputElemento.value);
-
-                taxaOutputElemento.innerHTML = taxaInputElemento.value;
-<!--                <input hidden th:value="${taxa}" id="taxainput">-->
-<!--                <p id="taxaoutput"></p>-->
+                taxaOutputElemento.innerHTML = taxa;
 
             }
+
+            function taxaRisco(taxaNormal, idade) {
+                const divmsgElemento = document.getElementById('divmsgemprestimo');
+                divmsgElemento.style.display="none";
+                if(idade < 18) {
+                    const msgElemento = document.getElementById('msgemprestimo');
+                    divmsgElemento.style.display="block";
+                    msgElemento.innerHTML = "Empréstimo exclusivo a partir de 18 anos.";
+                    document.emprestimo.datanascimento.focus();
+                    return null;
+                } else if (idade < 19) {
+                     return taxaNormal * 1.05;
+                } else if (idade < 46) {
+                    return taxaNormal * 1.02;
+                } else if (idade < 69) {
+                    return taxaNormal * 1.01;
+                } else {
+                    return taxaNormal;
+        }
+    }
 
 <!--            Créditos pelas funções abaixo:-->
 <!--            https://pt.stackoverflow.com/questions/199264/como-faco-uma-mascara-para-um-input-->

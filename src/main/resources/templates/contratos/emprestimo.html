@@ -46,6 +46,12 @@
                     <option th:each="parcela: ${listaparcelas}" th:value="${parcela}" th:text="${parcela}" th:name="${parcela}"/>
                 </select>
 
+                <label >Carencia:</label>
+                <select class="form-select" th:field="*{carencia}" name="carencia" required>
+                    <option selected data-default value=""></option>
+                    <option th:each="carencia: ${carencia}" th:value="${carencia}" th:text="${carencia}" th:name="${carencia}"/>
+                </select>
+
                 <button type="submit" class="btn btn-dark">Simular</button>
             </form>
         </div>
@@ -63,6 +69,7 @@
                 <th>CPF/CNPJ</th>
                 <th>Valor</th>
                 <th>Parcelas</th>
+                <th>Carência</th>
                 <th style="text-align: right;">Taxa Mensal</th>
                 <th style="text-align: right;">Taxa Anual</th>
             </tr>
@@ -76,6 +83,7 @@
 
                             <td th:text="${#numbers.formatCurrency(emprestimoretorno.valor)}"></td>
                             <td th:text="${emprestimoretorno.parcelas}"></td>
+                            <td th:text="${emprestimoretorno.carencia}"></td>
                             <td th:text="${emprestimoretorno.taxaMensal + ' % a.m.'}" style="text-align: right;"></td>
                             <td th:text="${emprestimoretorno.taxaAnual + ' % a.a.'}" style="text-align: right;"></td>
                             <td>
@@ -88,6 +96,7 @@
             <thead>
             <tr>
                 <th>Parcela</th>
+                <th>Data</th>
                 <th style="text-align: right;">Amortizacao</th>
                 <th style="text-align: right;">Juros</th>
                 <th style="text-align: right;">Total da Parcela</th>
@@ -96,12 +105,13 @@
             </thead>
 
             <tbody>
-            <tr th:each="parcela : ${parcelas}">
-                <td th:text="${parcela.parcela}"></td>
-                <td th:text="${#numbers.formatCurrency(parcela.amortizacao)}" style="text-align: right;"></td>
-                <td th:text="${#numbers.formatCurrency(parcela.juros)}" style="text-align: right;"></td>
-                <td th:text="${#numbers.formatCurrency(parcela.totalParcela)}" style="text-align: right;"></td>
-                <td th:text="${#numbers.formatCurrency(parcela.saldoDevedor)}" style="text-align: right;"></td>
+            <tr th:each="parceladto : ${parcelas}">
+                <td th:text="${parceladto.parcela}"></td>
+                <td th:text="${parceladto.data}"></td>
+                <td th:text="${#numbers.formatCurrency(parceladto.amortizacao)}" style="text-align: right;"></td>
+                <td th:text="${#numbers.formatCurrency(parceladto.juros)}" style="text-align: right;"></td>
+                <td th:text="${#numbers.formatCurrency(parceladto.totalParcela)}" style="text-align: right;"></td>
+                <td th:text="${#numbers.formatCurrency(parceladto.saldoDevedor)}" style="text-align: right;"></td>
                 <td>
 
             </tr>

@@ -11,6 +11,7 @@ public class EmprestimoAPI {
     private BigDecimal valor;
     private Integer parcelas;
     private LocalDate dataNascimento;
+    private String carencia;
 
     private BigDecimal taxaMensal;
     private String taxaAnual;
@@ -19,11 +20,12 @@ public class EmprestimoAPI {
     public EmprestimoAPI() {
     }
 
-    public EmprestimoAPI(String cpf_cnpj, BigDecimal valor, Integer parcelas, LocalDate dataNascimento, List<Parcela> parcelasResultado) {
+    public EmprestimoAPI(String cpf_cnpj, BigDecimal valor, Integer parcelas, LocalDate dataNascimento, String carencia, List<Parcela> parcelasResultado) {
         this.cpf_cnpj = cpf_cnpj;
         this.valor = valor;
         this.parcelas = parcelas;
         this.dataNascimento = dataNascimento;
+        this.carencia = carencia;
         this.parcelasResultado = parcelasResultado;
     }
 
@@ -81,6 +83,14 @@ public class EmprestimoAPI {
 
     public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
+    }
+
+    public String getCarencia() {
+        return carencia;
+    }
+
+    public void setCarencia(String carencia) {
+        this.carencia = carencia;
     }
 
     public LocalDate formataData(String dataJS) {

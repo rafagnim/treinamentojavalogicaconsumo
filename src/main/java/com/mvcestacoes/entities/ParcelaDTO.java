@@ -2,20 +2,21 @@ package com.mvcestacoes.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
 
-public class Parcela {
+public class ParcelaDTO {
 
     private int parcela;
-    private LocalDate data;
+    private String data;
     private BigDecimal amortizacao;
     private BigDecimal juros;
     private BigDecimal totalParcela;
     private BigDecimal saldoDevedor;
 
-    public Parcela() {
+    public ParcelaDTO() {
     }
 
-    public Parcela(int parcela, LocalDate data, BigDecimal amortizacao, BigDecimal juros, BigDecimal totalParcela, BigDecimal saldoDevedor) {
+    public ParcelaDTO(int parcela, String data, BigDecimal amortizacao, BigDecimal juros, BigDecimal totalParcela, BigDecimal saldoDevedor) {
         this.parcela = parcela;
         this.data = data;
         this.amortizacao = amortizacao;
@@ -64,11 +65,19 @@ public class Parcela {
         this.totalParcela = totalParcela;
     }
 
-    public LocalDate getData() {
+    public String getData() {
         return data;
     }
 
-    public void setData(LocalDate data) {
+    public void setData(String data) {
         this.data = data;
+    }
+
+    public static String formataData(LocalDate data) {
+
+        String dia = data.getDayOfMonth() > 9 ? String.valueOf(data.getDayOfMonth()) : "0" + data.getDayOfMonth();
+        String mes = data.getMonthValue() > 9 ? String.valueOf(data.getMonthValue()) : "0" + data.getMonthValue();
+        String dataRetorno = dia + "/" + mes + "/" + data.getYear();
+        return dataRetorno;
     }
 }
