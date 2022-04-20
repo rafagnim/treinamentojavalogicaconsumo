@@ -394,6 +394,8 @@
 
             function trataDataNascimento() {
                 const taxaInputElemento = document.getElementById('taxainput');
+                const divmsgElemento = document.getElementById('divmsgemprestimo');
+                const msgElemento = document.getElementById('msgemprestimo');
 
                 var taxa = taxaInputElemento.value;
 
@@ -401,21 +403,31 @@
                 const dataNascimentoTratada = dataNascimento.replace('-','/').replace('-','/');
                 var dataNascimento = new Date(dataNascimentoTratada);
                 var dataHoje = new Date();
-                var idade = dataHoje.getFullYear() - dataNascimento.getFullYear();
-                if (dataHoje.getMonth() <  dataNascimento.getMonth()) {
-                    idade -= 1;
+
+                var dataValida = true;
+
+                if (dataNascimento > dataHoje) {
+                    dataValida = false;
+                    divmsgElemento.style.display="block";
+                    msgElemento.innerHTML = "Não pode ser informada data futura.";
+                    document.emprestimo.datanascimento.focus();
+                } else {
+                    divmsgElemento.style.display="none";
                 }
-                if ((dataHoje.getMonth() == dataNascimento.getMonth()) && (dataHoje.getDate() < dataNascimento.getDate())) {
-                    idade -= 1;
+
+                if (dataValida) {
+                    var idade = dataHoje.getFullYear() - dataNascimento.getFullYear();
+                    if (dataHoje.getMonth() <  dataNascimento.getMonth()) {
+                        idade -= 1;
+                    }
+                    if ((dataHoje.getMonth() == dataNascimento.getMonth()) && (dataHoje.getDate() < dataNascimento.getDate())) {
+                        idade -= 1;
+                    }
+                    var taxa = taxaRisco(taxa, idade);
+                    var taxa = (((Math.pow (((taxa / 100) + 1), (1/12))) - 1) * 100).toFixed(4) + "% a.m.";
+                    const taxaOutputElemento = document.getElementById('taxaoutput');
+                    taxaOutputElemento.innerHTML = taxa;
                 }
-
-                var taxa = taxaRisco(taxa, idade);
-                var taxa = (((Math.pow (((taxa / 100) + 1), (1/12))) - 1) * 100).toFixed(4) + "% a.m.";
-
-                const taxaOutputElemento = document.getElementById('taxaoutput');
-
-                taxaOutputElemento.innerHTML = taxa;
-
             }
 
             function taxaRisco(taxaNormal, idade) {
